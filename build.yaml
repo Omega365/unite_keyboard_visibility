@@ -1,0 +1,12 @@
+global_options:
+  dart_mappable_builder:
+    options:
+      generateMethods: [copy, stringify, equals]
+
+targets:
+  $default:
+    builders:
+      dart_mappable_builder:
+        generate_for:
+          include:
+            - lib/src/states/**.dart

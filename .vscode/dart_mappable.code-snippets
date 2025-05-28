@@ -1,0 +1,23 @@
+{
+  "dart_mappable dataclass": {
+    "prefix": "dtclass",
+    "body": [
+      "import 'package:dart_mappable/dart_mappable.dart';",
+      "",
+      "part '$TM_FILENAME_BASE.mapper.dart';",
+      "",
+      "@MappableClass()",
+      "class ${TM_FILENAME_BASE/(^|_)(\\w)/${2:/upcase}/g} with ${TM_FILENAME_BASE/(^|_)(\\w)/${2:/upcase}/g}Mappable {",
+      "  $1",
+      "",
+      "  const ${TM_FILENAME_BASE/(^|_)(\\w)/${2:/upcase}/g}({",
+      "    $2",
+      "  });",
+      "",
+      "  factory ${TM_FILENAME_BASE/(^|_)(\\w)/${2:/upcase}/g}.fromJson(Map<String, dynamic> json) =>",
+      "      ${TM_FILENAME_BASE/(^|_)(\\w)/${2:/upcase}/g}Mapper.fromJson(json);",
+      "}"
+    ],
+    "description": ""
+  }
+}

@@ -14,6 +14,12 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
 
+  # For detecting keyboard visibility on platforms other than Android.
+  flutter_keyboard_visibility: ^6.0.0
+
+  # Models.
+  dart_mappable: ^4.5.0
+
   # Utils.
   rxdart: ^0.28.0
   meta: ^1.16.0
@@ -27,6 +33,10 @@ dev_dependencies:
     git:
       url: https://github.com/VinhNgT/vinhngt_flutter_lints.git
       ref: main
+
+  # Code generation.
+  build_runner: ^2.4.15
+  dart_mappable_builder: ^4.5.0
 
   # Platform channels code gen.
   pigeon: ^25.3.2
