@@ -1,19 +1,40 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:unite_keyboard_visibility/src/keyboard_state.dart';
-import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_method_channel.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_android.dart';
+import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
 abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
   /// Constructs a UniteKeyboardVisibilityPlatform.
   UniteKeyboardVisibilityPlatform() : super(token: _token);
 
+  /// Returns the correct platform-specific implementation based on the current
+  /// platform.
+  factory UniteKeyboardVisibilityPlatform._internal() {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'UniteKeyboardVisibility is not supported on web.',
+      );
+    }
+
+    if (Platform.isAndroid) {
+      return AndroidMethodChannelUniteKeyboardVisibility();
+    }
+
+    throw UnsupportedError(
+      'UniteKeyboardVisibility is not supported on '
+      '${Platform.operatingSystem}.',
+    );
+  }
+
   static final Object _token = Object();
 
   static UniteKeyboardVisibilityPlatform _instance =
-      MethodChannelUniteKeyboardVisibility();
+      UniteKeyboardVisibilityPlatform._internal();
 
   /// The default instance of [UniteKeyboardVisibilityPlatform] to use.
-  ///
-  /// Defaults to [MethodChannelUniteKeyboardVisibility].
   static UniteKeyboardVisibilityPlatform get instance => _instance;
 
   /// Platform-specific implementations should set this with their own
@@ -24,21 +45,10 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  KeyboardVisibilityState getCurrentState() {
-    throw UnimplementedError('getCurrentState() has not been implemented.');
-  }
+  /// Returns the current keyboard visibility state.
+  KeyboardVisibilityState get current;
 
-  Future<KeyboardVisibilityState> getPlatformState() {
-    throw UnimplementedError('getPlatformState() has not been implemented.');
-  }
-
-  Stream<KeyboardVisibilityState> watchVisibilityStates() {
-    throw UnimplementedError('watchStates() has not been implemented.');
-  }
-
-  Stream<KeyboardAnimationState> watchAnimationStates() {
-    throw UnimplementedError(
-      'watchAnimationStates() has not been implemented.',
-    );
-  }
+  /// Watch a stream of keyboard states. The current state will be emitted
+  /// immediately for any new listener.
+  ValueStream<KeyboardVisibilityState> watch();
 }

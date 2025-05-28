@@ -1,7 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
-class KeyboardVisibilityStateResponse {
-  const KeyboardVisibilityStateResponse({
+class AndroidKeyboardVisibilityStateResponse {
+  const AndroidKeyboardVisibilityStateResponse({
     required this.isVisible,
     required this.bottomInsetDevicePixels,
   });
@@ -23,14 +23,14 @@ class KeyboardVisibilityStateResponse {
   ),
 )
 @HostApi()
-abstract class KeyboardVisibilityHostApi {
-  KeyboardVisibilityStateResponse getCurrentState();
+abstract class AndroidKeyboardVisibilityHostApi {
+  AndroidKeyboardVisibilityStateResponse getRootVisibilityState();
 }
 
 @FlutterApi()
-abstract class KeyboardVisibilityFlutterApi {
+abstract class AndroidKeyboardVisibilityFlutterApi {
   /// Called when the keyboard visibility changes.
-  void onVisibilityChanged(KeyboardVisibilityStateResponse response);
+  void onVisibilityChanged(AndroidKeyboardVisibilityStateResponse response);
 
   /// Called when a keyboard animation is preparing to start.
   void onPrepare();
@@ -39,7 +39,7 @@ abstract class KeyboardVisibilityFlutterApi {
   void onStart(int lowerBoundDevicePixels, int upperBoundDevicePixels);
 
   /// Called when a keyboard animation is in progress.
-  void onProgress(KeyboardVisibilityStateResponse response);
+  void onProgress(AndroidKeyboardVisibilityStateResponse response);
 
   /// Called when a keyboard animation ends.
   void onEnd();

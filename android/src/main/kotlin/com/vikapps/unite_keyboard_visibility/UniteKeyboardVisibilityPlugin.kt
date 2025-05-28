@@ -4,27 +4,28 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import com.vikapps.unite_keyboard_visibility.generated.KeyboardVisibilityFlutterApi
-import com.vikapps.unite_keyboard_visibility.generated.KeyboardVisibilityHostApi
-import com.vikapps.unite_keyboard_visibility.generated.KeyboardVisibilityStateResponse
+import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityFlutterApi
+import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityHostApi
+import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityStateResponse
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 /** UniteKeyboardVisibilityPlugin */
-class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware, KeyboardVisibilityHostApi {
+class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
+  AndroidKeyboardVisibilityHostApi {
+  private lateinit var flutterApi: AndroidKeyboardVisibilityFlutterApi
   private var view: View? = null
-  private lateinit var flutterApi: KeyboardVisibilityFlutterApi
 
   // Plugin initialization starts here
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    flutterApi = KeyboardVisibilityFlutterApi(flutterPluginBinding.binaryMessenger)
-    KeyboardVisibilityHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
+    flutterApi = AndroidKeyboardVisibilityFlutterApi(flutterPluginBinding.binaryMessenger)
+    AndroidKeyboardVisibilityHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    KeyboardVisibilityHostApi.setUp(binding.binaryMessenger, null)
+    AndroidKeyboardVisibilityHostApi.setUp(binding.binaryMessenger, null)
   }
 
   // View initialization and configuration starts here
@@ -59,18 +60,18 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware, KeyboardVisi
   }
 
   /**
-   * Returns a [KeyboardVisibilityStateResponse] based on the current window insets.
+   * Returns a [AndroidKeyboardVisibilityStateResponse] based on the current window insets.
    *
    * This method extracts the keyboard (IME) visibility and the bottom inset in pixels,
    * which represents the distance from the bottom of the screen to the top of the keyboard.
    */
   private fun getKeyboardStateResponseFromInset(
     insets: WindowInsetsCompat
-  ): KeyboardVisibilityStateResponse {
+  ): AndroidKeyboardVisibilityStateResponse {
     val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
     val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom.toLong()
 
-    return KeyboardVisibilityStateResponse(isVisible = imeVisible, imeHeight)
+    return AndroidKeyboardVisibilityStateResponse(isVisible = imeVisible, imeHeight)
   }
 
   /**
@@ -145,7 +146,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware, KeyboardVisi
 
   // KeyboardVisibilityHostApi implementation starts here
 
-  override fun getCurrentState(): KeyboardVisibilityStateResponse {
+  override fun getRootVisibilityState(): AndroidKeyboardVisibilityStateResponse {
     val insets = view?.let { ViewCompat.getRootWindowInsets(it) }
       ?: throw IllegalStateException("Unable to get view insets")
 

@@ -82,16 +82,16 @@ class FlutterError (
 ) : Throwable()
 
 /** Generated class from Pigeon that represents data sent in messages. */
-data class KeyboardVisibilityStateResponse (
+data class AndroidKeyboardVisibilityStateResponse (
   val isVisible: Boolean,
   val bottomInsetDevicePixels: Long
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): KeyboardVisibilityStateResponse {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidKeyboardVisibilityStateResponse {
       val isVisible = pigeonVar_list[0] as Boolean
       val bottomInsetDevicePixels = pigeonVar_list[1] as Long
-      return KeyboardVisibilityStateResponse(isVisible, bottomInsetDevicePixels)
+      return AndroidKeyboardVisibilityStateResponse(isVisible, bottomInsetDevicePixels)
     }
   }
   fun toList(): List<Any?> {
@@ -101,7 +101,7 @@ data class KeyboardVisibilityStateResponse (
     )
   }
   override fun equals(other: Any?): Boolean {
-    if (other !is KeyboardVisibilityStateResponse) {
+    if (other !is AndroidKeyboardVisibilityStateResponse) {
       return false
     }
     if (this === other) {
@@ -116,7 +116,7 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          KeyboardVisibilityStateResponse.fromList(it)
+          AndroidKeyboardVisibilityStateResponse.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -124,7 +124,7 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is KeyboardVisibilityStateResponse -> {
+      is AndroidKeyboardVisibilityStateResponse -> {
         stream.write(129)
         writeValue(stream, value.toList())
       }
@@ -134,24 +134,24 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
 }
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
-interface KeyboardVisibilityHostApi {
-  fun getCurrentState(): KeyboardVisibilityStateResponse
+interface AndroidKeyboardVisibilityHostApi {
+  fun getRootVisibilityState(): AndroidKeyboardVisibilityStateResponse
 
   companion object {
-    /** The codec used by KeyboardVisibilityHostApi. */
+    /** The codec used by AndroidKeyboardVisibilityHostApi. */
     val codec: MessageCodec<Any?> by lazy {
       MessagesPigeonCodec()
     }
-    /** Sets up an instance of `KeyboardVisibilityHostApi` to handle messages through the `binaryMessenger`. */
+    /** Sets up an instance of `AndroidKeyboardVisibilityHostApi` to handle messages through the `binaryMessenger`. */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: KeyboardVisibilityHostApi?, messageChannelSuffix: String = "") {
+    fun setUp(binaryMessenger: BinaryMessenger, api: AndroidKeyboardVisibilityHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityHostApi.getCurrentState$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getRootVisibilityState$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
-              listOf(api.getCurrentState())
+              listOf(api.getRootVisibilityState())
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
@@ -165,18 +165,18 @@ interface KeyboardVisibilityHostApi {
   }
 }
 /** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
-class KeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+class AndroidKeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
   companion object {
-    /** The codec used by KeyboardVisibilityFlutterApi. */
+    /** The codec used by AndroidKeyboardVisibilityFlutterApi. */
     val codec: MessageCodec<Any?> by lazy {
       MessagesPigeonCodec()
     }
   }
   /** Called when the keyboard visibility changes. */
-  fun onVisibilityChanged(responseArg: KeyboardVisibilityStateResponse, callback: (Result<Unit>) -> Unit)
+  fun onVisibilityChanged(responseArg: AndroidKeyboardVisibilityStateResponse, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityFlutterApi.onVisibilityChanged$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(responseArg)) {
       if (it is List<*>) {
@@ -194,7 +194,7 @@ class KeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger,
   fun onPrepare(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityFlutterApi.onPrepare$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onPrepare$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -212,7 +212,7 @@ class KeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger,
   fun onStart(lowerBoundDevicePixelsArg: Long, upperBoundDevicePixelsArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityFlutterApi.onStart$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(lowerBoundDevicePixelsArg, upperBoundDevicePixelsArg)) {
       if (it is List<*>) {
@@ -227,10 +227,10 @@ class KeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger,
     }
   }
   /** Called when a keyboard animation is in progress. */
-  fun onProgress(responseArg: KeyboardVisibilityStateResponse, callback: (Result<Unit>) -> Unit)
+  fun onProgress(responseArg: AndroidKeyboardVisibilityStateResponse, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityFlutterApi.onProgress$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(responseArg)) {
       if (it is List<*>) {
@@ -248,7 +248,7 @@ class KeyboardVisibilityFlutterApi(private val binaryMessenger: BinaryMessenger,
   fun onEnd(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.KeyboardVisibilityFlutterApi.onEnd$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onEnd$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
