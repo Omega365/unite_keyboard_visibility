@@ -5,8 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
 import 'package:unite_keyboard_visibility/src/keyboard_state.dart';
-
-import 'unite_keyboard_visibility_platform_interface.dart';
+import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
 
 /// An implementation of [UniteKeyboardVisibilityPlatform] that uses method
 /// channels.

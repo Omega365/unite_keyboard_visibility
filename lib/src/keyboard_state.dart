@@ -20,7 +20,7 @@ class KeyboardVisibilityState extends KeyboardVisibilityStateResponse {
 
   @override
   String toString() =>
-      '$runtimeType('
+      '$KeyboardVisibilityState('
       'isVisible: $isVisible, '
       'bottomInsetDevicePixels: $bottomInsetDevicePixels'
       ')';
@@ -49,8 +49,9 @@ sealed class KeyboardAnimationState {
   /// {@macro KeyboardAnimationStateEnd()}
   const factory KeyboardAnimationState.onEnd() = KeyboardAnimationStateEnd;
 
+  @mustBeOverridden
   @override
-  String toString() => '$runtimeType()';
+  String toString();
 }
 
 /// Represents the keyboard animation state when it is preparing to start.
@@ -59,6 +60,9 @@ class KeyboardAnimationStatePrepare extends KeyboardAnimationState {
   /// Creates a [KeyboardAnimationStatePrepare].
   /// {@endtemplate}
   const KeyboardAnimationStatePrepare();
+
+  @override
+  String toString() => 'KeyboardAnimationStatePrepare()';
 }
 
 /// Represents the keyboard animation state when it starts.
@@ -82,7 +86,7 @@ class KeyboardAnimationStateStart extends KeyboardAnimationState {
 
   @override
   String toString() =>
-      '$runtimeType('
+      'KeyboardAnimationStateStart('
       'lowerBoundDevicePixels: $lowerBoundDevicePixels, '
       'upperBoundDevicePixels: $upperBoundDevicePixels'
       ')';
@@ -102,7 +106,7 @@ class KeyboardAnimationStateProgress extends KeyboardAnimationState {
 
   @override
   String toString() =>
-      '$runtimeType('
+      'KeyboardAnimationStateProgress('
       'keyboardState: $keyboardState'
       ')';
 }
@@ -113,4 +117,7 @@ class KeyboardAnimationStateEnd extends KeyboardAnimationState {
   /// Creates a [KeyboardAnimationStateEnd].
   /// {@endtemplate}
   const KeyboardAnimationStateEnd();
+
+  @override
+  String toString() => 'KeyboardAnimationStateEnd()';
 }
