@@ -10,14 +10,10 @@ import com.vikapps.unite_keyboard_visibility.generated.KeyboardVisibilityStateRe
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 
 /** UniteKeyboardVisibilityPlugin */
-class UniteKeyboardVisibilityPlugin: FlutterPlugin, ActivityAware, KeyboardVisibilityHostApi {
-   private var view: View? = null
+class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware, KeyboardVisibilityHostApi {
+  private var view: View? = null
   private lateinit var flutterApi: KeyboardVisibilityFlutterApi
 
   // Plugin initialization starts here
@@ -63,7 +59,7 @@ class UniteKeyboardVisibilityPlugin: FlutterPlugin, ActivityAware, KeyboardVisib
   }
 
   /**
-   * Returns a [KeyboardStateResponse] based on the current window insets.
+   * Returns a [KeyboardVisibilityStateResponse] based on the current window insets.
    *
    * This method extracts the keyboard (IME) visibility and the bottom inset in pixels,
    * which represents the distance from the bottom of the screen to the top of the keyboard.
@@ -86,7 +82,7 @@ class UniteKeyboardVisibilityPlugin: FlutterPlugin, ActivityAware, KeyboardVisib
       object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
         override fun onPrepare(animation: WindowInsetsAnimationCompat) {
           if (checkIsImeAnimation(animation)) {
-            flutterApi.onPrepare() { _ -> }
+            flutterApi.onPrepare { _ -> }
           }
         }
 
@@ -114,7 +110,7 @@ class UniteKeyboardVisibilityPlugin: FlutterPlugin, ActivityAware, KeyboardVisib
 
         override fun onEnd(animation: WindowInsetsAnimationCompat) {
           if (checkIsImeAnimation(animation)) {
-            flutterApi.onEnd() { _ -> }
+            flutterApi.onEnd { _ -> }
           }
         }
       },
