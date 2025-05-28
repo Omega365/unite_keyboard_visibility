@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
 
 void main() {
@@ -16,46 +15,57 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final _uniteKeyboardVisibilityPlugin = UniteKeyboardVisibility();
+
+  late final StreamSubscription<KeyboardVisibilityState> _visibilitySub;
+  late final StreamSubscription<KeyboardAnimationState> _animationSub;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+
+    // Listen to keyboard visibility change events
+    _visibilitySub = _uniteKeyboardVisibilityPlugin
+        .watchVisibilityStates()
+        .listen((visible) {
+          debugPrint('Keyboard state: $visible');
+        });
+
+    // Listen to keyboard animation events
+    _animationSub = _uniteKeyboardVisibilityPlugin
+        .watchAnimationStates()
+        .listen((event) {
+          // if (event is KeyboardAnimationStateProgress) {
+          //   return;
+          // }
+          debugPrint('Keyboard animation state: $event');
+        });
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _uniteKeyboardVisibilityPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  @override
+  void dispose() {
+    _animationSub.cancel();
+    _visibilitySub.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        appBar: AppBar(title: const Text('Plugin example app')),
+        body: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                final status = _uniteKeyboardVisibilityPlugin.getCurrentState();
+                debugPrint('Keyboard visibility status: $status');
+              },
+              child: const Text('Check Keyboard Visibility'),
+            ),
+            const SizedBox(height: 16),
+            TextField(),
+          ],
         ),
       ),
     );

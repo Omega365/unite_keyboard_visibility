@@ -1,4 +1,5 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:unite_keyboard_visibility/src/keyboard_state.dart';
 
 import 'unite_keyboard_visibility_method_channel.dart';
 
@@ -8,7 +9,8 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static UniteKeyboardVisibilityPlatform _instance = MethodChannelUniteKeyboardVisibility();
+  static UniteKeyboardVisibilityPlatform _instance =
+      MethodChannelUniteKeyboardVisibility();
 
   /// The default instance of [UniteKeyboardVisibilityPlatform] to use.
   ///
@@ -23,7 +25,21 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  KeyboardVisibilityState getCurrentState() {
+    throw UnimplementedError('getCurrentState() has not been implemented.');
+  }
+
+  Future<KeyboardVisibilityState> getPlatformState() {
+    throw UnimplementedError('getPlatformState() has not been implemented.');
+  }
+
+  Stream<KeyboardVisibilityState> watchVisibilityStates() {
+    throw UnimplementedError('watchStates() has not been implemented.');
+  }
+
+  Stream<KeyboardAnimationState> watchAnimationStates() {
+    throw UnimplementedError(
+      'watchAnimationStates() has not been implemented.',
+    );
   }
 }
