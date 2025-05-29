@@ -407,7 +407,7 @@ class AndroidKeyboardAnimationStateProgressMapper
       MapperContainer.globals
           .use(_instance = AndroidKeyboardAnimationStateProgressMapper._());
       AndroidKeyboardAnimationStateMapper.ensureInitialized();
-      KeyboardVisibilityStateMapper.ensureInitialized();
+      AndroidKeyboardVisibilityStateMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -415,11 +415,11 @@ class AndroidKeyboardAnimationStateProgressMapper
   @override
   final String id = 'AndroidKeyboardAnimationStateProgress';
 
-  static KeyboardVisibilityState _$visibilityState(
+  static AndroidKeyboardVisibilityState _$visibilityState(
           AndroidKeyboardAnimationStateProgress v) =>
       v.visibilityState;
   static const Field<AndroidKeyboardAnimationStateProgress,
-          KeyboardVisibilityState> _f$visibilityState =
+          AndroidKeyboardVisibilityState> _f$visibilityState =
       Field('visibilityState', _$visibilityState);
 
   @override
@@ -478,10 +478,10 @@ abstract class AndroidKeyboardAnimationStateProgressCopyWith<
     $R,
     $In extends AndroidKeyboardAnimationStateProgress,
     $Out> implements AndroidKeyboardAnimationStateCopyWith<$R, $In, $Out> {
-  KeyboardVisibilityStateCopyWith<$R, KeyboardVisibilityState,
-      KeyboardVisibilityState> get visibilityState;
+  AndroidKeyboardVisibilityStateCopyWith<$R, AndroidKeyboardVisibilityState,
+      AndroidKeyboardVisibilityState> get visibilityState;
   @override
-  $R call({KeyboardVisibilityState? visibilityState});
+  $R call({AndroidKeyboardVisibilityState? visibilityState});
   AndroidKeyboardAnimationStateProgressCopyWith<$R2, $In, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -498,12 +498,12 @@ class _AndroidKeyboardAnimationStateProgressCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AndroidKeyboardAnimationStateProgress> $mapper =
       AndroidKeyboardAnimationStateProgressMapper.ensureInitialized();
   @override
-  KeyboardVisibilityStateCopyWith<$R, KeyboardVisibilityState,
-          KeyboardVisibilityState>
+  AndroidKeyboardVisibilityStateCopyWith<$R, AndroidKeyboardVisibilityState,
+          AndroidKeyboardVisibilityState>
       get visibilityState => $value.visibilityState.copyWith
           .$chain((v) => call(visibilityState: v));
   @override
-  $R call({KeyboardVisibilityState? visibilityState}) =>
+  $R call({AndroidKeyboardVisibilityState? visibilityState}) =>
       $apply(FieldCopyWithData(
           {if (visibilityState != null) #visibilityState: visibilityState}));
   @override

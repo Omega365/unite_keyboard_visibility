@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_android.dart';
+import 'package:unite_keyboard_visibility/src/platform/android/unite_keyboard_visibility_android.dart';
 import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
 abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
@@ -20,7 +20,7 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
     }
 
     if (Platform.isAndroid) {
-      return AndroidMethodChannelUniteKeyboardVisibility();
+      return UniteKeyboardVisibilityAndroid();
     }
 
     throw UnsupportedError(
@@ -45,10 +45,14 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  /// Returns the current keyboard visibility state.
-  KeyboardVisibilityState get current;
+  /// {@template UniteKeyboardVisibilityPlatform.value}
+  /// Returns the current keyboard visibility.
+  /// {@endtemplate}
+  KeyboardVisibilityStatus get value;
 
-  /// Watch a stream of keyboard states. The current state will be emitted
+  /// {@template UniteKeyboardVisibilityPlatform.stream}
+  /// Watch a stream of keyboard visibility. The current value will be emitted
   /// immediately for any new listener.
-  ValueStream<KeyboardVisibilityState> watch();
+  /// {@endtemplate}
+  ValueStream<KeyboardVisibilityStatus> get stream;
 }

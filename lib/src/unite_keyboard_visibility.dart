@@ -6,11 +6,10 @@ class UniteKeyboardVisibility {
   static UniteKeyboardVisibilityPlatform get _platformInstance =>
       UniteKeyboardVisibilityPlatform.instance;
 
-  /// Returns the current keyboard visibility.
-  KeyboardVisibilityStatus get current => _platformInstance.current.status;
+  /// {@macro UniteKeyboardVisibilityPlatform.value}
+  KeyboardVisibilityStatus get value => _platformInstance.value;
 
-  /// Watch a stream of keyboard visibility. The current value will be emitted
-  /// immediately for any new listener.
-  ValueStream<KeyboardVisibilityStatus> watch() =>
-      _platformInstance.watch().map((state) => state.status).shareValue();
+  /// {@macro UniteKeyboardVisibilityPlatform.stream}
+  ValueStream<KeyboardVisibilityStatus> get valueStream =>
+      _platformInstance.stream;
 }

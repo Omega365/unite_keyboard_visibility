@@ -16,15 +16,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _uniteKeyboardVisibilityPlugin = UniteKeyboardVisibility();
-  late final StreamSubscription<KeyboardVisibilityStatus> _visibilitySub;
+  late final StreamSubscription _visibilitySub;
 
   @override
   void initState() {
     super.initState();
 
     // Listen to keyboard visibility change events
-    _visibilitySub = _uniteKeyboardVisibilityPlugin.watch().listen((visible) {
-      debugPrint('Keyboard state: $visible');
+    _visibilitySub = _uniteKeyboardVisibilityPlugin.valueStream.listen((
+      visible,
+    ) {
+      debugPrint('[D] TIME Keyboard state: $visible');
     });
   }
 
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final status = _uniteKeyboardVisibilityPlugin.current;
+                final status = _uniteKeyboardVisibilityPlugin.value;
                 debugPrint('Keyboard visibility status: $status');
               },
               child: const Text('Check Keyboard Visibility'),

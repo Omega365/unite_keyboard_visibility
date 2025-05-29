@@ -50,7 +50,7 @@ abstract class AndroidKeyboardAnimationState
   }) = AndroidKeyboardAnimationStateStart;
 
   const factory AndroidKeyboardAnimationState.onProgress({
-    required KeyboardVisibilityState visibilityState,
+    required AndroidKeyboardVisibilityState visibilityState,
   }) = AndroidKeyboardAnimationStateProgress;
 
   const factory AndroidKeyboardAnimationState.onEnd() =
@@ -88,7 +88,7 @@ class AndroidKeyboardAnimationStateProgress
   const AndroidKeyboardAnimationStateProgress({required this.visibilityState});
 
   /// The state of the keyboard animation.
-  final KeyboardVisibilityState visibilityState;
+  final AndroidKeyboardVisibilityState visibilityState;
 }
 
 /// Represents the keyboard animation state when it ends.
