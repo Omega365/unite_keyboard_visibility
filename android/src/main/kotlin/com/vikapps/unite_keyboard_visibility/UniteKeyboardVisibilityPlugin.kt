@@ -32,7 +32,8 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     view = binding.activity.window.decorView  // capture root view.
-    view?.let { setupViewListeners(it); it.requestApplyInsets() }
+    view?.let { setupViewListeners(it) }
+//    view?.requestApplyInsets()
   }
 
   override fun onDetachedFromActivity() {
@@ -42,7 +43,8 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     view = binding.activity.window.decorView  // recapture after config change.
-    view?.let { setupViewListeners(it); it.requestApplyInsets() }
+    view?.let { setupViewListeners(it) }
+//    view?.requestApplyInsets()
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
@@ -146,7 +148,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
 
   // KeyboardVisibilityHostApi implementation starts here
 
-  override fun getRootVisibilityState(): AndroidKeyboardVisibilityStateResponse {
+  override fun getVisibilityStateFromRootView(): AndroidKeyboardVisibilityStateResponse {
     val insets = view?.let { ViewCompat.getRootWindowInsets(it) }
       ?: throw IllegalStateException("Unable to get view insets")
 

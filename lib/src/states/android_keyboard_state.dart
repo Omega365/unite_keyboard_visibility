@@ -39,7 +39,7 @@ class AndroidKeyboardVisibilityState extends KeyboardVisibilityState
 @MappableClass()
 abstract class AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateMappable {
-  const AndroidKeyboardAnimationState();
+  const AndroidKeyboardAnimationState({required this.currentVerdict});
 
   const factory AndroidKeyboardAnimationState.onPrepare() =
       AndroidKeyboardAnimationStatePrepare;
@@ -47,21 +47,27 @@ abstract class AndroidKeyboardAnimationState
   const factory AndroidKeyboardAnimationState.onStart({
     required int lowerBoundDevicePixels,
     required int upperBoundDevicePixels,
+    required KeyboardVisibilityStatus currentVerdict,
   }) = AndroidKeyboardAnimationStateStart;
 
   const factory AndroidKeyboardAnimationState.onProgress({
     required AndroidKeyboardVisibilityState visibilityState,
+    required KeyboardVisibilityStatus currentVerdict,
   }) = AndroidKeyboardAnimationStateProgress;
 
-  const factory AndroidKeyboardAnimationState.onEnd() =
-      AndroidKeyboardAnimationStateEnd;
+  const factory AndroidKeyboardAnimationState.onEnd({
+    required KeyboardVisibilityStatus currentVerdict,
+  }) = AndroidKeyboardAnimationStateEnd;
+
+  /// The keyboard visibility status at the time of the animation state.
+  final KeyboardVisibilityStatus? currentVerdict;
 }
 
 /// Represents the keyboard animation state when it is preparing to start.
 @MappableClass()
 class AndroidKeyboardAnimationStatePrepare extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStatePrepareMappable {
-  const AndroidKeyboardAnimationStatePrepare();
+  const AndroidKeyboardAnimationStatePrepare() : super(currentVerdict: null);
 }
 
 /// Represents the keyboard animation state when it starts.
@@ -71,6 +77,7 @@ class AndroidKeyboardAnimationStateStart extends AndroidKeyboardAnimationState
   const AndroidKeyboardAnimationStateStart({
     required this.lowerBoundDevicePixels,
     required this.upperBoundDevicePixels,
+    required super.currentVerdict,
   });
 
   /// The lower bound of the keyboard animation in device pixels.
@@ -85,7 +92,10 @@ class AndroidKeyboardAnimationStateStart extends AndroidKeyboardAnimationState
 class AndroidKeyboardAnimationStateProgress
     extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateProgressMappable {
-  const AndroidKeyboardAnimationStateProgress({required this.visibilityState});
+  const AndroidKeyboardAnimationStateProgress({
+    required this.visibilityState,
+    required super.currentVerdict,
+  });
 
   /// The state of the keyboard animation.
   final AndroidKeyboardVisibilityState visibilityState;
@@ -95,5 +105,5 @@ class AndroidKeyboardAnimationStateProgress
 @MappableClass()
 class AndroidKeyboardAnimationStateEnd extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateEndMappable {
-  const AndroidKeyboardAnimationStateEnd();
+  const AndroidKeyboardAnimationStateEnd({required super.currentVerdict});
 }

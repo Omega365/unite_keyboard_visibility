@@ -54,16 +54,16 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
   }
 
   static void initialize({required bool enableLogging}) {
-    // Replace the current instance with a new one.
-    _instance?.close();
-    instance = UniteKeyboardVisibilityPlatform._internal();
-
-    // Reinitialize the logger with the new instance.
+    // Reinitialize logger.
     _logger?.close();
     _logger = Logger(
       printer: SimplePrinter(colors: false, printTime: true),
       level: enableLogging ? Level.all : Level.off,
     );
+
+    // Replace the current instance with a new one.
+    _instance?.close();
+    instance = UniteKeyboardVisibilityPlatform._internal();
   }
 
   static Logger? _logger;

@@ -125,8 +125,8 @@ class AndroidKeyboardVisibilityHostApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<AndroidKeyboardVisibilityStateResponse> getRootVisibilityState() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getRootVisibilityState$pigeonVar_messageChannelSuffix';
+  Future<AndroidKeyboardVisibilityStateResponse> getVisibilityStateFromRootView() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibilityStateFromRootView$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

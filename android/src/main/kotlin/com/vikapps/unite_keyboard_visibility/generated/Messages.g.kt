@@ -135,7 +135,7 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
 
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface AndroidKeyboardVisibilityHostApi {
-  fun getRootVisibilityState(): AndroidKeyboardVisibilityStateResponse
+  fun getVisibilityStateFromRootView(): AndroidKeyboardVisibilityStateResponse
 
   companion object {
     /** The codec used by AndroidKeyboardVisibilityHostApi. */
@@ -147,11 +147,11 @@ interface AndroidKeyboardVisibilityHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: AndroidKeyboardVisibilityHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getRootVisibilityState$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vikapps.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibilityStateFromRootView$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
-              listOf(api.getRootVisibilityState())
+              listOf(api.getVisibilityStateFromRootView())
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }

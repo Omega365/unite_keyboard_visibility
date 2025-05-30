@@ -24,7 +24,7 @@ class AndroidKeyboardVisibilityStateResponse {
 )
 @HostApi()
 abstract class AndroidKeyboardVisibilityHostApi {
-  AndroidKeyboardVisibilityStateResponse getRootVisibilityState();
+  AndroidKeyboardVisibilityStateResponse getVisibilityStateFromRootView();
 }
 
 @FlutterApi()

@@ -144,8 +144,16 @@ class AndroidKeyboardAnimationStateMapper
   @override
   final String id = 'AndroidKeyboardAnimationState';
 
+  static KeyboardVisibilityStatus? _$currentVerdict(
+          AndroidKeyboardAnimationState v) =>
+      v.currentVerdict;
+  static const Field<AndroidKeyboardAnimationState, KeyboardVisibilityStatus>
+      _f$currentVerdict = Field('currentVerdict', _$currentVerdict);
+
   @override
-  final MappableFields<AndroidKeyboardAnimationState> fields = const {};
+  final MappableFields<AndroidKeyboardAnimationState> fields = const {
+    #currentVerdict: _f$currentVerdict,
+  };
 
   static AndroidKeyboardAnimationState _instantiate(DecodingData data) {
     throw MapperException.missingConstructor('AndroidKeyboardAnimationState');
@@ -188,8 +196,17 @@ class AndroidKeyboardAnimationStatePrepareMapper
   @override
   final String id = 'AndroidKeyboardAnimationStatePrepare';
 
+  static KeyboardVisibilityStatus? _$currentVerdict(
+          AndroidKeyboardAnimationStatePrepare v) =>
+      v.currentVerdict;
+  static const Field<AndroidKeyboardAnimationStatePrepare,
+          KeyboardVisibilityStatus> _f$currentVerdict =
+      Field('currentVerdict', _$currentVerdict, mode: FieldMode.member);
+
   @override
-  final MappableFields<AndroidKeyboardAnimationStatePrepare> fields = const {};
+  final MappableFields<AndroidKeyboardAnimationStatePrepare> fields = const {
+    #currentVerdict: _f$currentVerdict,
+  };
 
   static AndroidKeyboardAnimationStatePrepare _instantiate(DecodingData data) {
     return AndroidKeyboardAnimationStatePrepare();
@@ -299,17 +316,25 @@ class AndroidKeyboardAnimationStateStartMapper
   static const Field<AndroidKeyboardAnimationStateStart, int>
       _f$upperBoundDevicePixels =
       Field('upperBoundDevicePixels', _$upperBoundDevicePixels);
+  static KeyboardVisibilityStatus? _$currentVerdict(
+          AndroidKeyboardAnimationStateStart v) =>
+      v.currentVerdict;
+  static const Field<AndroidKeyboardAnimationStateStart,
+          KeyboardVisibilityStatus> _f$currentVerdict =
+      Field('currentVerdict', _$currentVerdict);
 
   @override
   final MappableFields<AndroidKeyboardAnimationStateStart> fields = const {
     #lowerBoundDevicePixels: _f$lowerBoundDevicePixels,
     #upperBoundDevicePixels: _f$upperBoundDevicePixels,
+    #currentVerdict: _f$currentVerdict,
   };
 
   static AndroidKeyboardAnimationStateStart _instantiate(DecodingData data) {
     return AndroidKeyboardAnimationStateStart(
         lowerBoundDevicePixels: data.dec(_f$lowerBoundDevicePixels),
-        upperBoundDevicePixels: data.dec(_f$upperBoundDevicePixels));
+        upperBoundDevicePixels: data.dec(_f$upperBoundDevicePixels),
+        currentVerdict: data.dec(_f$currentVerdict));
   }
 
   @override
@@ -357,7 +382,10 @@ abstract class AndroidKeyboardAnimationStateStartCopyWith<
     $In extends AndroidKeyboardAnimationStateStart,
     $Out> implements AndroidKeyboardAnimationStateCopyWith<$R, $In, $Out> {
   @override
-  $R call({int? lowerBoundDevicePixels, int? upperBoundDevicePixels});
+  $R call(
+      {int? lowerBoundDevicePixels,
+      int? upperBoundDevicePixels,
+      KeyboardVisibilityStatus? currentVerdict});
   AndroidKeyboardAnimationStateStartCopyWith<$R2, $In, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -374,12 +402,16 @@ class _AndroidKeyboardAnimationStateStartCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AndroidKeyboardAnimationStateStart> $mapper =
       AndroidKeyboardAnimationStateStartMapper.ensureInitialized();
   @override
-  $R call({int? lowerBoundDevicePixels, int? upperBoundDevicePixels}) =>
+  $R call(
+          {int? lowerBoundDevicePixels,
+          int? upperBoundDevicePixels,
+          Object? currentVerdict = $none}) =>
       $apply(FieldCopyWithData({
         if (lowerBoundDevicePixels != null)
           #lowerBoundDevicePixels: lowerBoundDevicePixels,
         if (upperBoundDevicePixels != null)
-          #upperBoundDevicePixels: upperBoundDevicePixels
+          #upperBoundDevicePixels: upperBoundDevicePixels,
+        if (currentVerdict != $none) #currentVerdict: currentVerdict
       }));
   @override
   AndroidKeyboardAnimationStateStart $make(CopyWithData data) =>
@@ -387,7 +419,8 @@ class _AndroidKeyboardAnimationStateStartCopyWithImpl<$R, $Out>
           lowerBoundDevicePixels: data.get(#lowerBoundDevicePixels,
               or: $value.lowerBoundDevicePixels),
           upperBoundDevicePixels: data.get(#upperBoundDevicePixels,
-              or: $value.upperBoundDevicePixels));
+              or: $value.upperBoundDevicePixels),
+          currentVerdict: data.get(#currentVerdict, or: $value.currentVerdict));
 
   @override
   AndroidKeyboardAnimationStateStartCopyWith<$R2,
@@ -421,15 +454,23 @@ class AndroidKeyboardAnimationStateProgressMapper
   static const Field<AndroidKeyboardAnimationStateProgress,
           AndroidKeyboardVisibilityState> _f$visibilityState =
       Field('visibilityState', _$visibilityState);
+  static KeyboardVisibilityStatus? _$currentVerdict(
+          AndroidKeyboardAnimationStateProgress v) =>
+      v.currentVerdict;
+  static const Field<AndroidKeyboardAnimationStateProgress,
+          KeyboardVisibilityStatus> _f$currentVerdict =
+      Field('currentVerdict', _$currentVerdict);
 
   @override
   final MappableFields<AndroidKeyboardAnimationStateProgress> fields = const {
     #visibilityState: _f$visibilityState,
+    #currentVerdict: _f$currentVerdict,
   };
 
   static AndroidKeyboardAnimationStateProgress _instantiate(DecodingData data) {
     return AndroidKeyboardAnimationStateProgress(
-        visibilityState: data.dec(_f$visibilityState));
+        visibilityState: data.dec(_f$visibilityState),
+        currentVerdict: data.dec(_f$currentVerdict));
   }
 
   @override
@@ -481,7 +522,9 @@ abstract class AndroidKeyboardAnimationStateProgressCopyWith<
   AndroidKeyboardVisibilityStateCopyWith<$R, AndroidKeyboardVisibilityState,
       AndroidKeyboardVisibilityState> get visibilityState;
   @override
-  $R call({AndroidKeyboardVisibilityState? visibilityState});
+  $R call(
+      {AndroidKeyboardVisibilityState? visibilityState,
+      KeyboardVisibilityStatus? currentVerdict});
   AndroidKeyboardAnimationStateProgressCopyWith<$R2, $In, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -503,14 +546,19 @@ class _AndroidKeyboardAnimationStateProgressCopyWithImpl<$R, $Out>
       get visibilityState => $value.visibilityState.copyWith
           .$chain((v) => call(visibilityState: v));
   @override
-  $R call({AndroidKeyboardVisibilityState? visibilityState}) =>
-      $apply(FieldCopyWithData(
-          {if (visibilityState != null) #visibilityState: visibilityState}));
+  $R call(
+          {AndroidKeyboardVisibilityState? visibilityState,
+          Object? currentVerdict = $none}) =>
+      $apply(FieldCopyWithData({
+        if (visibilityState != null) #visibilityState: visibilityState,
+        if (currentVerdict != $none) #currentVerdict: currentVerdict
+      }));
   @override
   AndroidKeyboardAnimationStateProgress $make(CopyWithData data) =>
       AndroidKeyboardAnimationStateProgress(
           visibilityState:
-              data.get(#visibilityState, or: $value.visibilityState));
+              data.get(#visibilityState, or: $value.visibilityState),
+          currentVerdict: data.get(#currentVerdict, or: $value.currentVerdict));
 
   @override
   AndroidKeyboardAnimationStateProgressCopyWith<$R2,
@@ -537,11 +585,20 @@ class AndroidKeyboardAnimationStateEndMapper
   @override
   final String id = 'AndroidKeyboardAnimationStateEnd';
 
+  static KeyboardVisibilityStatus? _$currentVerdict(
+          AndroidKeyboardAnimationStateEnd v) =>
+      v.currentVerdict;
+  static const Field<AndroidKeyboardAnimationStateEnd, KeyboardVisibilityStatus>
+      _f$currentVerdict = Field('currentVerdict', _$currentVerdict);
+
   @override
-  final MappableFields<AndroidKeyboardAnimationStateEnd> fields = const {};
+  final MappableFields<AndroidKeyboardAnimationStateEnd> fields = const {
+    #currentVerdict: _f$currentVerdict,
+  };
 
   static AndroidKeyboardAnimationStateEnd _instantiate(DecodingData data) {
-    return AndroidKeyboardAnimationStateEnd();
+    return AndroidKeyboardAnimationStateEnd(
+        currentVerdict: data.dec(_f$currentVerdict));
   }
 
   @override
@@ -587,7 +644,7 @@ abstract class AndroidKeyboardAnimationStateEndCopyWith<
     $In extends AndroidKeyboardAnimationStateEnd,
     $Out> implements AndroidKeyboardAnimationStateCopyWith<$R, $In, $Out> {
   @override
-  $R call();
+  $R call({KeyboardVisibilityStatus? currentVerdict});
   AndroidKeyboardAnimationStateEndCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -604,10 +661,12 @@ class _AndroidKeyboardAnimationStateEndCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AndroidKeyboardAnimationStateEnd> $mapper =
       AndroidKeyboardAnimationStateEndMapper.ensureInitialized();
   @override
-  $R call() => $apply(FieldCopyWithData({}));
+  $R call({Object? currentVerdict = $none}) => $apply(FieldCopyWithData(
+      {if (currentVerdict != $none) #currentVerdict: currentVerdict}));
   @override
   AndroidKeyboardAnimationStateEnd $make(CopyWithData data) =>
-      AndroidKeyboardAnimationStateEnd();
+      AndroidKeyboardAnimationStateEnd(
+          currentVerdict: data.get(#currentVerdict, or: $value.currentVerdict));
 
   @override
   AndroidKeyboardAnimationStateEndCopyWith<$R2,
