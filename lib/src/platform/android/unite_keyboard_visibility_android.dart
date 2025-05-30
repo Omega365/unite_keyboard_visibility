@@ -45,6 +45,16 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     required bool enableLogging,
     required bool forceFallback,
   }) async {
+    if (forceFallback) {
+      UniteKeyboardVisibilityFallback.registerWith();
+      await UniteKeyboardVisibility.instance.initialize(
+        enableLogging: enableLogging,
+        forceFallback: forceFallback,
+      );
+
+      return;
+    }
+
     /// The logger instance for logging events.
     final logger = Logger(
       printer: SimplePrinter(colors: false, printTime: true),

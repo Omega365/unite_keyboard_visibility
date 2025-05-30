@@ -5,10 +5,6 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 /// A class that provides methods to access the device keyboard visibility
 /// status.
 ///
-/// Please note that **[KeyboardVisibilityStatus.maybeClose]** and
-/// **[KeyboardVisibilityStatus.maybeOpen]** are currently only supported on
-/// Android.
-///
 /// Example:
 /// ```dart
 /// // Ensure widget binding is initialized
@@ -52,9 +48,9 @@ class UniteKeyboardVisibility {
   ///     ignored on iOS. On Android, it forces the use of the fallback
   ///     implementation, which may be necessary if the newer implementation
   ///     does not work correctly on some devices. Note that
-  ///     [KeyboardVisibilityStatus.maybeClose] and
-  ///     [KeyboardVisibilityStatus.maybeOpen] are not supported in fallback
-  ///     mode. Defaults to `false`.
+  ///     [KeyboardVisibilityStatus.maybeClose],
+  ///     [KeyboardVisibilityStatus.maybeOpen] and floating keyboard are not
+  ///     supported in fallback mode. Defaults to `false`.
   Future<void> initialize({
     bool enableLogging = false,
     bool forceFallback = false,
