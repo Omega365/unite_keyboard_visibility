@@ -27,10 +27,20 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 class UniteKeyboardVisibility {
   /// Initializes keyboard visibility detection.
   ///
-  /// - [enableLogging] enables verbose internal logging when set to true.
-  ///   Useful for debugging but may impact performance.
-  static void initialize({bool enableLogging = false}) {
-    UniteKeyboardVisibilityPlatform.initialize(enableLogging: enableLogging);
+  /// - [enableLogging]: Enables internal logging when set to true. Useful for
+  ///   debugging but may impact performance. Defaults to false.
+  ///
+  /// - [forceFallback]: Forces the use of the older implementation
+  ///   (`https://pub.dev/packages/flutter_keyboard_visibility`) regardless of
+  ///   platform. Defaults to false.
+  static void initialize({
+    bool enableLogging = false,
+    bool forceFallback = false,
+  }) {
+    UniteKeyboardVisibilityPlatform.initialize(
+      enableLogging: enableLogging,
+      forceFallback: forceFallback,
+    );
   }
 
   static UniteKeyboardVisibilityPlatform get _platformInstance =>

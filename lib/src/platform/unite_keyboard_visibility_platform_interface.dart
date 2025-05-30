@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/unite_keyboard_visibility_android.dart';
+import 'package:unite_keyboard_visibility/src/platform/fallback/unite_keyboard_visibility_fallback.dart';
 import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
 final _notInitializedError = StateError(
@@ -17,21 +18,20 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
 
   /// Returns the correct platform-specific implementation based on the current
   /// platform.
-  factory UniteKeyboardVisibilityPlatform._internal() {
+  factory UniteKeyboardVisibilityPlatform._internal({
+    required bool forceFallback,
+  }) {
     if (kIsWeb) {
       throw UnsupportedError(
         'UniteKeyboardVisibility is not supported on web.',
       );
     }
 
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && !forceFallback) {
       return UniteKeyboardVisibilityAndroid();
     }
 
-    throw UnsupportedError(
-      'UniteKeyboardVisibility is not supported on '
-      '${Platform.operatingSystem}.',
-    );
+    return UniteKeyboardVisibilityFallback();
   }
 
   static final Object _token = Object();
@@ -53,7 +53,10 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  static void initialize({required bool enableLogging}) {
+  static void initialize({
+    required bool enableLogging,
+    required bool forceFallback,
+  }) {
     // Reinitialize logger.
     _logger?.close();
     _logger = Logger(
@@ -63,7 +66,9 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
 
     // Replace the current instance with a new one.
     _instance?.close();
-    instance = UniteKeyboardVisibilityPlatform._internal();
+    instance = UniteKeyboardVisibilityPlatform._internal(
+      forceFallback: forceFallback,
+    );
   }
 
   static Logger? _logger;
