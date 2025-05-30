@@ -5,13 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
 
-// Toggle between using the plugin logger or the example app logger.
-const _usePluginLogger = false;
-
 // Example app logger.
 final logger = Logger(
   printer: PrettyPrinter(methodCount: 1, printEmojis: false),
-  level: _usePluginLogger ? Level.warning : Level.all,
 );
 
 void main() async {
@@ -21,9 +17,7 @@ void main() async {
   };
 
   WidgetsFlutterBinding.ensureInitialized();
-  await UniteKeyboardVisibility.instance.initialize(
-    enableLogging: _usePluginLogger,
-  );
+  await UniteKeyboardVisibility.instance.initialize(enableLogging: true);
 
   runApp(const MyApp());
 }
