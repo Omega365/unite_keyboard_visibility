@@ -63,8 +63,10 @@ flutter:
         package: com.vinhngt.unite_keyboard_visibility
         pluginClass: UniteKeyboardVisibilityPlugin
         dartPluginClass: UniteKeyboardVisibilityAndroid
+        dartFileName: 'src/platform/android/unite_keyboard_visibility_android.dart'
       ios:
         dartPluginClass: UniteKeyboardVisibilityFallback
+        dartFileName: 'src/platform/fallback/unite_keyboard_visibility_fallback.dart'
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
