@@ -39,6 +39,9 @@ class UniteKeyboardVisibility {
   UniteKeyboardVisibilityPlatform get _platformInstance =>
       UniteKeyboardVisibilityPlatform.instance;
 
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+
   /// Initializes keyboard visibility detection.
   ///
   /// Parameters:
@@ -60,6 +63,7 @@ class UniteKeyboardVisibility {
       enableLogging: enableLogging,
       forceFallback: forceFallback,
     );
+    _isInitialized = true;
   }
 
   /// Disposes the plugin and releases resources.
@@ -68,10 +72,25 @@ class UniteKeyboardVisibility {
   }
 
   /// Returns the current keyboard visibility.
-  KeyboardVisibilityStatus get value => _platformInstance.value;
+  KeyboardVisibilityStatus get value {
+    if (!_isInitialized) {
+      throw _notInitializedError;
+    }
+    return _platformInstance.value;
+  }
 
   /// Watch a stream of keyboard visibility. The current value will be emitted
   /// immediately for any new listener.
-  ValueStream<KeyboardVisibilityStatus> get valueStream =>
-      _platformInstance.stream;
+  ValueStream<KeyboardVisibilityStatus> get valueStream {
+    if (!_isInitialized) {
+      throw _notInitializedError;
+    }
+    return _platformInstance.stream;
+  }
 }
+
+/// Error thrown when accessing plugin before initialization.
+final _notInitializedError = StateError(
+  'UniteKeyboardVisibility has not been initialized. '
+  'Call initialize() before accessing value or valueStream.',
+);
