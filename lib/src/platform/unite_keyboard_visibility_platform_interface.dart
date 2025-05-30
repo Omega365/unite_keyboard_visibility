@@ -27,11 +27,18 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
       );
     }
 
-    if (Platform.isAndroid && !forceFallback) {
+    if (forceFallback || Platform.isIOS) {
+      return UniteKeyboardVisibilityFallback();
+    }
+
+    if (Platform.isAndroid) {
       return UniteKeyboardVisibilityAndroid();
     }
 
-    return UniteKeyboardVisibilityFallback();
+    throw UnsupportedError(
+      'UniteKeyboardVisibility is not supported on this platform: '
+      '${Platform.operatingSystem}.',
+    );
   }
 
   static final Object _token = Object();
