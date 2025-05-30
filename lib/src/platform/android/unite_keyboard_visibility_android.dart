@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:logger/logger.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_errors.dart';
@@ -10,36 +9,14 @@ import 'package:unite_keyboard_visibility/src/states/android_keyboard_state.dart
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
 
 class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
-  /// Unnamed constructor for [UniteKeyboardVisibilityPlatform] to use.
-  @protected
-  UniteKeyboardVisibilityAndroid() {
-    /// The logger instance for logging events.
-    final logger = UniteKeyboardVisibilityPlatform.logger;
-
-    // Start listening to the keyboard visibility verdicts.
-    _verdictStreamSubscription =
-        _flutterApi.visibilityVerdictStream.distinct().listen((event) {
-      logger.d('Final verdict: ${event.name}');
-      _resultStreamCtl.add(event);
-    });
-
-    // The current state will be removed after every Hot-Restart so we need to
-    // query it again to ensure we always have a valid initial value.
-    Future.microtask(() async {
-      late final AndroidKeyboardVisibilityState currentState;
-      if (!_resultStreamCtl.hasValue) {
-        currentState = await _queryCurrentState();
-      }
-      // Check again due to async gap.
-      if (!_resultStreamCtl.hasValue) {
-        logger.d('Hot-Restart detected, adding initial state');
-        _resultStreamCtl.add(currentState.status);
-      }
-    });
+  /// Registers this class as the default instance of
+  /// [UniteKeyboardVisibilityPlatform].
+  static void registerWith() {
+    UniteKeyboardVisibilityPlatform.instance = UniteKeyboardVisibilityAndroid();
   }
 
   /// The Flutter API for receiving events from the native Android code.
-  final _flutterApi = _AndroidKeyboardFlutterApiHandler();
+  late final _AndroidKeyboardFlutterApiHandler _flutterApi;
 
   // The host API for communicating with the native Android code.
   final _hostApi = AndroidKeyboardVisibilityHostApi();
@@ -53,12 +30,6 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     sync: true,
   );
 
-  /// Registers this class as the default instance of
-  /// [UniteKeyboardVisibilityPlatform].
-  static void registerWith() {
-    UniteKeyboardVisibilityPlatform.instance = UniteKeyboardVisibilityAndroid();
-  }
-
   /// Queries the current keyboard visibility state from the native Android
   /// code.
   Future<AndroidKeyboardVisibilityState> _queryCurrentState() async {
@@ -70,7 +41,46 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   }
 
   @override
-  Future<void> close() async {
+  Future<void> initialize({
+    required bool enableLogging,
+    required bool forceFallback,
+  }) async {
+    /// The logger instance for logging events.
+    final logger = Logger(
+      printer: SimplePrinter(colors: false, printTime: true),
+      level: enableLogging ? Level.all : Level.off,
+    );
+
+    _flutterApi = _AndroidKeyboardFlutterApiHandler(logger: logger);
+    AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApi);
+
+    // Start listening to the keyboard visibility verdicts.
+    _verdictStreamSubscription =
+        _flutterApi.visibilityVerdictStream.distinct().listen((event) {
+      logger.d('Final verdict: ${event.name}');
+      _resultStreamCtl.add(event);
+    });
+
+    // The current state will be removed after every Hot-Restart so we need to
+    // query it again to ensure we always have a valid initial value.
+    await Future.microtask(() async {
+      if (_resultStreamCtl.hasValue) {
+        return;
+      }
+
+      final AndroidKeyboardVisibilityState currentState =
+          await _queryCurrentState();
+
+      // Check again due to async gap.
+      if (!_resultStreamCtl.hasValue) {
+        logger.d('Hot-Restart detected, adding initial state');
+        _resultStreamCtl.add(currentState.status);
+      }
+    });
+  }
+
+  @override
+  Future<void> dispose() async {
     await Future.wait([
       _flutterApi.close(),
       _verdictStreamSubscription.cancel(),
@@ -97,9 +107,8 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
 /// keyboard visibility status.
 class _AndroidKeyboardFlutterApiHandler
     implements AndroidKeyboardVisibilityFlutterApi {
-  _AndroidKeyboardFlutterApiHandler() {
-    AndroidKeyboardVisibilityFlutterApi.setUp(this);
-  }
+  _AndroidKeyboardFlutterApiHandler({required Logger logger})
+      : _logger = logger;
 
   /// Returns a stream of keyboard visibility verdicts combined from both
   /// [visibilityStream] and [animationStream].
@@ -132,7 +141,7 @@ class _AndroidKeyboardFlutterApiHandler
       StreamController<AndroidKeyboardAnimationState>.broadcast(sync: true);
 
   /// The logger instance for logging API events.
-  Logger get _logger => UniteKeyboardVisibilityPlatform.logger;
+  final Logger _logger;
 
   // The current active animation session.
   _AndroidKeyboardAnimationSession? _animationSession;

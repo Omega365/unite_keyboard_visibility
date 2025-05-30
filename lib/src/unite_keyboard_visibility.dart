@@ -29,33 +29,49 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 /// });
 /// ```
 class UniteKeyboardVisibility {
+  UniteKeyboardVisibility._internal();
+
+  static final UniteKeyboardVisibility _instance =
+      UniteKeyboardVisibility._internal();
+
+  static UniteKeyboardVisibility get instance => _instance;
+
+  UniteKeyboardVisibilityPlatform get _platformInstance =>
+      UniteKeyboardVisibilityPlatform.instance;
+
   /// Initializes keyboard visibility detection.
   ///
-  /// - [enableLogging]: Enables internal logging when set to true. Useful for
-  ///   debugging but may impact performance. Defaults to false.
+  /// Parameters:
+  ///   - [enableLogging]: Enables internal logging when set to true. Useful for
+  ///     debugging but may impact performance. Defaults to `false`.
   ///
-  /// - [forceFallback]: Enable fallback mode, which forces the use of the older
-  ///   implementation (`https://pub.dev/packages/flutter_keyboard_visibility`)
-  ///   regardless of platform. [KeyboardVisibilityStatus.maybeClose] and
-  ///   [KeyboardVisibilityStatus.maybeOpen] is not supported in fallback mode.
-  ///   Defaults to false.
-  static void initialize({
+  ///   - [forceFallback]: iOS always uses fallback mode, so this parameter is
+  ///     ignored on iOS. On Android, it forces the use of the fallback
+  ///     implementation, which may be necessary if the newer implementation
+  ///     does not work correctly on some devices. Note that
+  ///     [KeyboardVisibilityStatus.maybeClose] and
+  ///     [KeyboardVisibilityStatus.maybeOpen] are not supported in fallback
+  ///     mode. Defaults to `false`.
+  Future<void> initialize({
     bool enableLogging = false,
     bool forceFallback = false,
-  }) {
-    UniteKeyboardVisibilityPlatform.initialize(
+  }) async {
+    await _platformInstance.initialize(
       enableLogging: enableLogging,
       forceFallback: forceFallback,
     );
   }
 
-  static UniteKeyboardVisibilityPlatform get _platformInstance =>
-      UniteKeyboardVisibilityPlatform.instance;
+  /// Disposes the plugin and releases resources.
+  Future<void> dispose() async {
+    await _platformInstance.dispose();
+  }
 
-  /// {@macro UniteKeyboardVisibilityPlatform.value}
+  /// Returns the current keyboard visibility.
   KeyboardVisibilityStatus get value => _platformInstance.value;
 
-  /// {@macro UniteKeyboardVisibilityPlatform.stream}
+  /// Watch a stream of keyboard visibility. The current value will be emitted
+  /// immediately for any new listener.
   ValueStream<KeyboardVisibilityStatus> get valueStream =>
       _platformInstance.stream;
 }

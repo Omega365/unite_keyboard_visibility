@@ -14,14 +14,16 @@ final logger = Logger(
   level: _usePluginLogger ? Level.warning : Level.all,
 );
 
-void main() {
+void main() async {
   PlatformDispatcher.instance.onError = (error, stack) {
     logger.e('Unhandled platform error', error: error, stackTrace: stack);
     return true;
   };
 
   WidgetsFlutterBinding.ensureInitialized();
-  UniteKeyboardVisibility.initialize(enableLogging: _usePluginLogger);
+  await UniteKeyboardVisibility.instance.initialize(
+    enableLogging: _usePluginLogger,
+  );
 
   runApp(const MyApp());
 }
@@ -34,7 +36,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _uniteKeyboardVisibilityPlugin = UniteKeyboardVisibility();
+  final _uniteKeyboardVisibilityPlugin = UniteKeyboardVisibility.instance;
   late final StreamSubscription _visibilitySub;
 
   @override
