@@ -5,6 +5,10 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 /// A class that provides methods to access the device keyboard visibility
 /// status.
 ///
+/// Please note that **[KeyboardVisibilityStatus.maybeClose]** and
+/// **[KeyboardVisibilityStatus.maybeOpen]** are currently only supported on
+/// Android.
+///
 /// Example:
 /// ```dart
 /// // Ensure widget binding is initialized
@@ -30,9 +34,11 @@ class UniteKeyboardVisibility {
   /// - [enableLogging]: Enables internal logging when set to true. Useful for
   ///   debugging but may impact performance. Defaults to false.
   ///
-  /// - [forceFallback]: Forces the use of the older implementation
-  ///   (`https://pub.dev/packages/flutter_keyboard_visibility`) regardless of
-  ///   platform. Defaults to false.
+  /// - [forceFallback]: Enable fallback mode, which forces the use of the older
+  ///   implementation (`https://pub.dev/packages/flutter_keyboard_visibility`)
+  ///   regardless of platform. [KeyboardVisibilityStatus.maybeClose] and
+  ///   [KeyboardVisibilityStatus.maybeOpen] is not supported in fallback mode.
+  ///   Defaults to false.
   static void initialize({
     bool enableLogging = false,
     bool forceFallback = false,
