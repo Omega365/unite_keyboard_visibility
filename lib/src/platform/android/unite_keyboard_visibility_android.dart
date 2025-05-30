@@ -17,12 +17,11 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     final logger = UniteKeyboardVisibilityPlatform.logger;
 
     // Start listening to the keyboard visibility verdicts.
-    _verdictStreamSubscription = _flutterApi.visibilityVerdictStream
-        .distinct()
-        .listen((event) {
-          logger.d('Final verdict: ${event.name}');
-          _resultStreamCtl.add(event);
-        });
+    _verdictStreamSubscription =
+        _flutterApi.visibilityVerdictStream.distinct().listen((event) {
+      logger.d('Final verdict: ${event.name}');
+      _resultStreamCtl.add(event);
+    });
 
     // The current state will be removed after every Hot-Restart so we need to
     // query it again to ensure we always have a valid initial value.
@@ -53,6 +52,12 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>(
     sync: true,
   );
+
+  /// Registers this class as the default instance of
+  /// [UniteKeyboardVisibilityPlatform].
+  static void registerWith() {
+    UniteKeyboardVisibilityPlatform.instance = UniteKeyboardVisibilityAndroid();
+  }
 
   /// Queries the current keyboard visibility state from the native Android
   /// code.
@@ -102,8 +107,8 @@ class _AndroidKeyboardFlutterApiHandler
     return Rx.merge<KeyboardVisibilityStatus>([
       visibilityStream.map((e) => e.status),
       animationStream.whereType<AndroidKeyboardAnimationStateEnd>().map(
-        (e) => e.currentVerdict!,
-      ),
+            (e) => e.currentVerdict!,
+          ),
     ]);
   }
 

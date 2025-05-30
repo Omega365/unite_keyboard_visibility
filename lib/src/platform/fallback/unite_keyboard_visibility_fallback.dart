@@ -16,12 +16,19 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
     _verdictStreamSubscription = keyboardVisibilityController.onChange
         .startWith(keyboardVisibilityController.isVisible)
         .listen((isVisible) {
-          _resultStreamCtl.add(
-            isVisible
-                ? KeyboardVisibilityStatus.open
-                : KeyboardVisibilityStatus.close,
-          );
-        });
+      _resultStreamCtl.add(
+        isVisible
+            ? KeyboardVisibilityStatus.open
+            : KeyboardVisibilityStatus.close,
+      );
+    });
+  }
+
+  /// Registers this class as the default instance of
+  /// [UniteKeyboardVisibilityPlatform].
+  static void registerWith() {
+    UniteKeyboardVisibilityPlatform.instance =
+        UniteKeyboardVisibilityFallback();
   }
 
   /// The stream subscription for listening to keyboard visibility verdicts.
