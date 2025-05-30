@@ -1,4 +1,4 @@
-package com.vikapps.unite_keyboard_visibility
+package com.vinhngt.unite_keyboard_visibility
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

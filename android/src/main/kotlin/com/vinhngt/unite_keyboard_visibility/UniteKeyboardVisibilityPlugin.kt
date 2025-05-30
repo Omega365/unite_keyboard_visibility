@@ -1,12 +1,12 @@
-package com.vikapps.unite_keyboard_visibility
+package com.vinhngt.unite_keyboard_visibility
 
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityFlutterApi
-import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityHostApi
-import com.vikapps.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityStateResponse
+import com.vinhngt.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityFlutterApi
+import com.vinhngt.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityHostApi
+import com.vinhngt.unite_keyboard_visibility.generated.AndroidKeyboardVisibilityStateResponse
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding

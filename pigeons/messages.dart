@@ -15,11 +15,11 @@ class AndroidKeyboardVisibilityStateResponse {
     dartOut: 'lib/src/generated/messages.g.dart',
     dartOptions: DartOptions(),
     kotlinOut:
-        'android/src/main/kotlin/com/vikapps/unite_keyboard_visibility/generated/Messages.g.kt',
+        'android/src/main/kotlin/com/vinhngt/unite_keyboard_visibility/generated/Messages.g.kt',
     kotlinOptions: KotlinOptions(
-      package: 'com.vikapps.unite_keyboard_visibility.generated',
+      package: 'com.vinhngt.unite_keyboard_visibility.generated',
     ),
-    dartPackageName: 'com.vikapps.unite_keyboard_visibility',
+    dartPackageName: 'com.vinhngt.unite_keyboard_visibility',
   ),
 )
 @HostApi()

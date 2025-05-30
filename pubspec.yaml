@@ -60,7 +60,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.vikapps.unite_keyboard_visibility
+        package: com.vinhngt.unite_keyboard_visibility
         pluginClass: UniteKeyboardVisibilityPlugin
 
   # To add assets to your plugin package, add an assets section, like this:

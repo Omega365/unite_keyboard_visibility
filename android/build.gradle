@@ -1,4 +1,4 @@
-group = "com.vikapps.unite_keyboard_visibility"
+group = "com.vinhngt.unite_keyboard_visibility"
 version = "1.0-SNAPSHOT"
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 android {
-    namespace = "com.vikapps.unite_keyboard_visibility"
+    namespace = "com.vinhngt.unite_keyboard_visibility"
 
     compileSdk = 35
 
