@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:meta/meta.dart';
 
 part 'keyboard_state.mapper.dart';
 
@@ -8,6 +9,7 @@ enum KeyboardVisibilityStatus {
   close,
   maybeClose;
 
+  @internal
   KeyboardVisibilityStatus graduate() {
     switch (this) {
       case KeyboardVisibilityStatus.open:
