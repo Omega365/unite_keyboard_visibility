@@ -13,20 +13,18 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   /// Unnamed constructor for [UniteKeyboardVisibilityPlatform] to use.
   @protected
   UniteKeyboardVisibilityAndroid() {
-    /// The Flutter API for receiving events from the native Android code.
-    final flutterApi = _AndroidKeyboardFlutterApiHandler(_logger);
     _resultTransformer = _KeyboardVisibilityStatusTransformer(flutterApi);
   }
 
-  final _logger = Logger(
-    printer: SimplePrinter(colors: false, printTime: true),
-  );
+  /// The Flutter API for receiving events from the native Android code.
+  final flutterApi = _AndroidKeyboardFlutterApiHandler();
 
   // The host API for communicating with the native Android code.
   final _hostApi = AndroidKeyboardVisibilityHostApi();
 
   late final _KeyboardVisibilityStatusTransformer _resultTransformer;
 
+  @override
   Future<void> close() async {
     await _resultTransformer.close();
   }
@@ -51,13 +49,8 @@ class _KeyboardVisibilityStatusTransformer {
   _KeyboardVisibilityStatusTransformer(
     _AndroidKeyboardFlutterApiHandler flutterApi,
   ) : _flutterApi = flutterApi {
-    _init();
+    _initListeners();
   }
-
-  /// The Flutter API for receiving events from the native Android code.
-  final _AndroidKeyboardFlutterApiHandler _flutterApi;
-
-  final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>();
 
   KeyboardVisibilityStatus get value {
     if (_resultStreamCtl.hasValue) {
@@ -66,11 +59,26 @@ class _KeyboardVisibilityStatusTransformer {
     throw StateError('No keyboard state has been emitted yet.');
   }
 
-  ValueStream<KeyboardVisibilityStatus> get stream => _resultStreamCtl.stream;
+  ValueStream<KeyboardVisibilityStatus> get stream =>
+      _resultStreamCtl.stream.distinct().shareValue();
 
-  void _init() {
+  /// The Flutter API for receiving events from the native Android code.
+  final _AndroidKeyboardFlutterApiHandler _flutterApi;
+
+  Logger get _logger => UniteKeyboardVisibilityPlatform.logger;
+
+  final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>(
+    sync: true,
+  );
+
+  late final StreamSubscription _selfSubscription;
+
+  void _initListeners() {
     _flutterApi.visibilityStream.listen(_onVisibilityChanged);
     _flutterApi.animationStream.listen(_onAnimationChanged);
+    _selfSubscription = stream.listen(
+      (event) => _logger.d('Visibility verdict: ${event.name}'),
+    );
   }
 
   void _onVisibilityChanged(AndroidKeyboardVisibilityState visibilityState) {
@@ -86,7 +94,11 @@ class _KeyboardVisibilityStatusTransformer {
   }
 
   Future<void> close() async {
-    await Future.wait([_flutterApi.close(), _resultStreamCtl.close()]);
+    await Future.wait([
+      _flutterApi.close(),
+      _selfSubscription.cancel(),
+      _resultStreamCtl.close(),
+    ]);
   }
 }
 
@@ -94,9 +106,10 @@ class _KeyboardVisibilityStatusTransformer {
 /// platform callbacks.
 class _AndroidKeyboardFlutterApiHandler
     implements AndroidKeyboardVisibilityFlutterApi {
-  _AndroidKeyboardFlutterApiHandler(this._logger) {
+  _AndroidKeyboardFlutterApiHandler() {
     AndroidKeyboardVisibilityFlutterApi.setUp(this);
   }
+  _AndroidKeyboardAnimationSession? animationSession;
 
   Stream<AndroidKeyboardVisibilityState> get visibilityStream =>
       _visibilityStreamCtl.stream;
@@ -106,11 +119,11 @@ class _AndroidKeyboardFlutterApiHandler
 
   final _visibilityStreamCtl =
       StreamController<AndroidKeyboardVisibilityState>.broadcast(sync: true);
+
   final _animationStreamCtl =
       StreamController<AndroidKeyboardAnimationState>.broadcast(sync: true);
 
-  final Logger _logger;
-  _AndroidKeyboardAnimationSession? animationSession;
+  Logger get _logger => UniteKeyboardVisibilityPlatform.logger;
 
   Future<void> close() async {
     AndroidKeyboardVisibilityFlutterApi.setUp(null);

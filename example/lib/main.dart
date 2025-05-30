@@ -1,9 +1,28 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
 
+// Toggle between using the plugin logger or the example app logger.
+const _usePluginLogger = false;
+
+// Example app logger.
+final logger = Logger(
+  printer: PrettyPrinter(methodCount: 1, printEmojis: false),
+  level: _usePluginLogger ? Level.warning : Level.all,
+);
+
 void main() {
+  PlatformDispatcher.instance.onError = (error, stack) {
+    logger.e('Unhandled platform error', error: error, stackTrace: stack);
+    return true;
+  };
+
+  WidgetsFlutterBinding.ensureInitialized();
+  UniteKeyboardVisibility.initialize(enableLogging: _usePluginLogger);
+
   runApp(const MyApp());
 }
 
@@ -23,11 +42,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     // Listen to keyboard visibility change events
-    _visibilitySub = _uniteKeyboardVisibilityPlugin.valueStream.listen((
-      visible,
-    ) {
-      debugPrint('[D] TIME Keyboard state: $visible');
-    });
+    _visibilitySub = _uniteKeyboardVisibilityPlugin.valueStream.listen(
+      (visible) => logger.i('Keyboard visibility changed: $visible'),
+    );
   }
 
   @override
@@ -46,7 +63,7 @@ class _MyAppState extends State<MyApp> {
             ElevatedButton(
               onPressed: () async {
                 final status = _uniteKeyboardVisibilityPlugin.value;
-                debugPrint('Keyboard visibility status: $status');
+                logger.i('Current keyboard visibility: $status');
               },
               child: const Text('Check Keyboard Visibility'),
             ),
