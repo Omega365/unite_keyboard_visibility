@@ -67,11 +67,10 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApi);
 
     // Start listening to the keyboard visibility verdicts.
-    _verdictStreamSubscription =
-        _flutterApi.visibilityVerdictStream.distinct().listen((event) {
-      logger.d('Final verdict: ${event.name}');
-      _resultStreamCtl.add(event);
-    });
+    _verdictStreamSubscription = _flutterApi.visibilityVerdictStream
+        .doOnData((event) => logger.d('Final verdict: ${event.name}'))
+        .distinct()
+        .listen(_resultStreamCtl.add);
 
     // The current state will be removed after every Hot-Restart so we need to
     // query it again to ensure we always have a valid initial value.
