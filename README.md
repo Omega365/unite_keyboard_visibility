@@ -1,4 +1,4 @@
-# unite_keyboard_visibility
+# Unite keyboard visibility
 
 A Flutter plugin to detect keyboard visibility across platforms using modern
 APIs. Supports floating keyboard and Android 15 predictive back gesture.
