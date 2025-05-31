@@ -7,22 +7,24 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 ///
 /// Example:
 /// ```dart
-/// // Ensure widget binding is initialized
+/// // Initialize the plugin.
 /// WidgetsFlutterBinding.ensureInitialized();
+/// await UniteKeyboardVisibility.instance.initialize();
 ///
-/// // Initialize the plugin (enable logging if needed)
-/// UniteKeyboardVisibility.initialize(enableLogging: true);
+/// // Access the singleton instance.
+/// final visibility = UniteKeyboardVisibility.instance;
 ///
-/// // Create an instance to access keyboard visibility
-/// final visibility = UniteKeyboardVisibility();
-///
-/// // Get current visibility status
+/// // Get current visibility status.
 /// final status = visibility.value;
+/// print('Keyboard is $status');
 ///
-/// // Listen for visibility changes
+/// // Listen for visibility changes.
 /// visibility.valueStream.listen((status) {
 ///   print('Keyboard visibility changed: $status');
 /// });
+///
+/// // When done, dispose the plugin.
+/// await visibility.dispose();
 /// ```
 class UniteKeyboardVisibility {
   UniteKeyboardVisibility._internal();
