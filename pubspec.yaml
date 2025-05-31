@@ -19,7 +19,7 @@ dependencies:
   plugin_platform_interface: ^2.0.2
 
   # For detecting keyboard visibility on platforms other than Android.
-  flutter_keyboard_visibility: ^6.0.0
+  flutter_keyboard_visibility_temp_fork: ^0.1.5
 
   # Models.
   dart_mappable: ^4.5.0
