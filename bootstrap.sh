@@ -3,7 +3,7 @@ set -e
 
 fvm use
 dart pub get
-bash run_pigeon.sh
+bash scripts/run_pigeon.sh
 
 (
     cd example
