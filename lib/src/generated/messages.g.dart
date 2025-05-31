@@ -15,7 +15,8 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse(
+    {Object? result, PlatformException? error, bool empty = false}) {
   if (empty) {
     return <Object?>[];
   }
@@ -24,20 +25,21 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
   }
   return <Object?>[error.code, error.message, error.details];
 }
+
 bool _deepEquals(Object? a, Object? b) {
   if (a is List && b is List) {
     return a.length == b.length &&
         a.indexed
-        .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
   }
   if (a is Map && b is Map) {
-    return a.length == b.length && a.entries.every((MapEntry<Object?, Object?> entry) =>
-        (b as Map<Object?, Object?>).containsKey(entry.key) &&
-        _deepEquals(entry.value, b[entry.key]));
+    return a.length == b.length &&
+        a.entries.every((MapEntry<Object?, Object?> entry) =>
+            (b as Map<Object?, Object?>).containsKey(entry.key) &&
+            _deepEquals(entry.value, b[entry.key]));
   }
   return a == b;
 }
-
 
 class AndroidKeyboardVisibilityStateResponse {
   AndroidKeyboardVisibilityStateResponse({
@@ -57,7 +59,8 @@ class AndroidKeyboardVisibilityStateResponse {
   }
 
   Object encode() {
-    return _toList();  }
+    return _toList();
+  }
 
   static AndroidKeyboardVisibilityStateResponse decode(Object result) {
     result as List<Object?>;
@@ -70,7 +73,8 @@ class AndroidKeyboardVisibilityStateResponse {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
-    if (other is! AndroidKeyboardVisibilityStateResponse || other.runtimeType != runtimeType) {
+    if (other is! AndroidKeyboardVisibilityStateResponse ||
+        other.runtimeType != runtimeType) {
       return false;
     }
     if (identical(this, other)) {
@@ -81,10 +85,8 @@ class AndroidKeyboardVisibilityStateResponse {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => Object.hashAll(_toList())
-;
+  int get hashCode => Object.hashAll(_toList());
 }
-
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -93,7 +95,7 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is AndroidKeyboardVisibilityStateResponse) {
+    } else if (value is AndroidKeyboardVisibilityStateResponse) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
@@ -104,8 +106,9 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
-        return AndroidKeyboardVisibilityStateResponse.decode(readValue(buffer)!);
+      case 129:
+        return AndroidKeyboardVisibilityStateResponse.decode(
+            readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -116,18 +119,23 @@ class AndroidKeyboardVisibilityHostApi {
   /// Constructor for [AndroidKeyboardVisibilityHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  AndroidKeyboardVisibilityHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  AndroidKeyboardVisibilityHostApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        pigeonVar_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
-  Future<AndroidKeyboardVisibilityStateResponse> getVisibilityStateFromRootView() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibilityStateFromRootView$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+  Future<AndroidKeyboardVisibilityStateResponse>
+      getVisibilityStateFromRootView() async {
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibilityStateFromRootView$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
@@ -149,7 +157,8 @@ class AndroidKeyboardVisibilityHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (pigeonVar_replyList[0] as AndroidKeyboardVisibilityStateResponse?)!;
+      return (pigeonVar_replyList[0]
+          as AndroidKeyboardVisibilityStateResponse?)!;
     }
   }
 }
@@ -172,20 +181,29 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
   /// Called when a keyboard animation ends.
   void onEnd();
 
-  static void setUp(AndroidKeyboardVisibilityFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    AndroidKeyboardVisibilityFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged was null.');
+              'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AndroidKeyboardVisibilityStateResponse? arg_response = (args[0] as AndroidKeyboardVisibilityStateResponse?);
+          final AndroidKeyboardVisibilityStateResponse? arg_response =
+              (args[0] as AndroidKeyboardVisibilityStateResponse?);
           assert(arg_response != null,
               'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onVisibilityChanged was null, expected non-null AndroidKeyboardVisibilityStateResponse.');
           try {
@@ -193,15 +211,19 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onPrepare$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onPrepare$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
@@ -212,22 +234,26 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart was null.');
+              'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final int? arg_lowerBoundDevicePixels = (args[0] as int?);
           assert(arg_lowerBoundDevicePixels != null,
@@ -236,28 +262,34 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
           assert(arg_upperBoundDevicePixels != null,
               'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onStart was null, expected non-null int.');
           try {
-            api.onStart(arg_lowerBoundDevicePixels!, arg_upperBoundDevicePixels!);
+            api.onStart(
+                arg_lowerBoundDevicePixels!, arg_upperBoundDevicePixels!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress was null.');
+              'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress was null.');
           final List<Object?> args = (message as List<Object?>?)!;
-          final AndroidKeyboardVisibilityStateResponse? arg_response = (args[0] as AndroidKeyboardVisibilityStateResponse?);
+          final AndroidKeyboardVisibilityStateResponse? arg_response =
+              (args[0] as AndroidKeyboardVisibilityStateResponse?);
           assert(arg_response != null,
               'Argument for dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onProgress was null, expected non-null AndroidKeyboardVisibilityStateResponse.');
           try {
@@ -265,15 +297,19 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onEnd$messageChannelSuffix', pigeonChannelCodec,
+      final BasicMessageChannel<
+          Object?> pigeonVar_channel = BasicMessageChannel<
+              Object?>(
+          'dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityFlutterApi.onEnd$messageChannelSuffix',
+          pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
@@ -284,8 +320,9 @@ abstract class AndroidKeyboardVisibilityFlutterApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
           }
         });
       }

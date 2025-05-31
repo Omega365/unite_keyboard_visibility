@@ -1,7 +1,6 @@
 import 'package:unite_keyboard_visibility/src/states/android_keyboard_state.dart';
 
-const _reportMessage =
-    'This should never happen, '
+const _reportMessage = 'This should never happen, '
     'if you encounter this then it\'s either a bug in the plugin '
     'or the operating system behaves in a way that is not expected. '
     'Please take a look at the plugin\'s issue tracker '

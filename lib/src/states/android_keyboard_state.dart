@@ -19,11 +19,11 @@ class AndroidKeyboardVisibilityState extends KeyboardVisibilityState
   }) {
     final status = response.isVisible
         ? (isMaybe
-              ? KeyboardVisibilityStatus.maybeOpen
-              : KeyboardVisibilityStatus.open)
+            ? KeyboardVisibilityStatus.maybeOpen
+            : KeyboardVisibilityStatus.open)
         : (isMaybe
-              ? KeyboardVisibilityStatus.maybeClose
-              : KeyboardVisibilityStatus.close);
+            ? KeyboardVisibilityStatus.maybeClose
+            : KeyboardVisibilityStatus.close);
 
     return AndroidKeyboardVisibilityState(
       status: status,
