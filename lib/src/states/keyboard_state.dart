@@ -3,12 +3,26 @@ import 'package:meta/meta.dart';
 
 part 'keyboard_state.mapper.dart';
 
+/// Represents the keyboard visibility status.
 enum KeyboardVisibilityStatus {
+  /// The keyboard is fully open.
   open,
+
+  /// The keyboard is opening, but not fully finished.
   maybeOpen,
+
+  /// The keyboard is fully closed.
   close,
+
+  /// The keyboard is closing but not fully finished.
   maybeClose;
 
+  /// Extension method for [KeyboardVisibilityStatus] to graduate uncertain
+  /// states to definite ones.
+  ///
+  /// - [maybeOpen] is treated as [open].
+  /// - [maybeClose] is treated as [close].
+  /// - [open] and [close] remain unchanged.
   @internal
   KeyboardVisibilityStatus graduate() {
     switch (this) {

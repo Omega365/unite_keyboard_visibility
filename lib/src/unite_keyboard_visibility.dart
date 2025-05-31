@@ -32,12 +32,15 @@ class UniteKeyboardVisibility {
   static final UniteKeyboardVisibility _instance =
       UniteKeyboardVisibility._internal();
 
+  /// The singleton instance of [UniteKeyboardVisibility].
   static UniteKeyboardVisibility get instance => _instance;
 
   UniteKeyboardVisibilityPlatform get _platformInstance =>
       UniteKeyboardVisibilityPlatform.instance;
 
   bool _isInitialized = false;
+
+  /// Whether the plugin has been initialized.
   bool get isInitialized => _isInitialized;
 
   /// Initializes keyboard visibility detection.
