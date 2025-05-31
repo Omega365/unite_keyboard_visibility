@@ -37,7 +37,7 @@ import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await UniteKeyboardVisibility.initialize();
+  await UniteKeyboardVisibility.instance.initialize();
 
   runApp(const MyApp());
 }
