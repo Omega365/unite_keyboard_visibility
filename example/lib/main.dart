@@ -30,17 +30,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _uniteKeyboardVisibilityPlugin = UniteKeyboardVisibility.instance;
   late final StreamSubscription _visibilitySub;
+  KeyboardVisibilityStatus? _visibilityStatus;
 
   @override
   void initState() {
     super.initState();
 
     // Listen to keyboard visibility change events
-    _visibilitySub = _uniteKeyboardVisibilityPlugin.valueStream.listen(
-      (visible) => logger.i('Keyboard visibility changed: $visible'),
-    );
+    _visibilitySub = UniteKeyboardVisibility.instance.valueStream.listen((
+      visible,
+    ) {
+      setState(() {
+        _visibilityStatus = visible;
+      });
+      logger.i('Keyboard visibility changed: $visible');
+    });
   }
 
   @override
@@ -53,18 +58,33 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
+        appBar: AppBar(title: const Text('Unite Keyboard Visibility Example')),
         body: Column(
           children: [
-            ElevatedButton(
-              onPressed: () async {
-                final status = _uniteKeyboardVisibilityPlugin.value;
-                logger.i('Current keyboard visibility: $status');
-              },
-              child: const Text('Check Keyboard Visibility'),
-            ),
             const SizedBox(height: 16),
-            TextField(),
+            Text(
+              '${_visibilityStatus?.name}',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'Press here',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Text('Unfocus'),
+            ),
           ],
         ),
       ),
