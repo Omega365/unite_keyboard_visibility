@@ -1,4 +1,4 @@
-![Header](resources/Header.png)
+![Header](resources/Header.jpg)
 
 ---
 
