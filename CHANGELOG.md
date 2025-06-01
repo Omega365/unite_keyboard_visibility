@@ -1,3 +1,7 @@
+## [0.1.1] - 2025-06-01
+### Changed
+- Update README.md
+
 ## [0.1.0] - 2025-06-01
 ### Changed
 - Update the included example.
@@ -12,6 +16,7 @@
 ### Added
 - Initial release.
 
+[0.1.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.0.2...0.1.0
 [0.0.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.0.1...0.0.2
 [0.0.1]: https://github.com/VinhNgT/unite_keyboard_visibility/releases/tag/0.0.1
