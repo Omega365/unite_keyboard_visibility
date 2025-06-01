@@ -102,3 +102,8 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/to/font-from-package
+
+cider:
+  link_template:
+    tag: https://github.com/VinhNgT/unite_keyboard_visibility/releases/tag/%tag%
+    diff: https://github.com/VinhNgT/unite_keyboard_visibility/compare/%from%...%to%
