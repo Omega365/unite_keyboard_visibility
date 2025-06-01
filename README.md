@@ -15,6 +15,10 @@ WASM support is planned.
 Desktop platforms like macOS, Windows and Linux are not planned. Still, you are
 welcome to make contributions in this regard.
 
+| Basic open-close                                                          | Predictive back                                                                     | Floating keyboard                                                                       |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| <img src="resources/gifs/open-close.gif" alt="open-close" height="480" /> | <img src="resources/gifs/predictive-back.gif" alt="predictive-back" height="480" /> | <img src="resources/gifs/floating-keyboard.gif" alt="floating-keyboard" height="480" /> |
+
 ## Installation
 
 Add the dependency to your `pubspec.yaml`:
