@@ -1,4 +1,6 @@
-# Unite keyboard visibility
+![Header](resources/Header.png)
+
+---
 
 A Flutter plugin to detect keyboard visibility across platforms using modern
 APIs. Supports floating keyboard and Android 15 predictive back gesture.
@@ -19,7 +21,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  unite_keyboard_visibility: ^0.0.1
+  unite_keyboard_visibility: ^0.1.0
 ```
 
 Then get packages:
