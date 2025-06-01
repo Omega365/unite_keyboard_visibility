@@ -101,7 +101,7 @@ print('Keyboard is $status');
 ```
 
 Listen to visibility changes, the current value will be emited immediately for
-any new listener.
+any new listener:
 
 ```dart
 visibility.valueStream.listen((status) {
