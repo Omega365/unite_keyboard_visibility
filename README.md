@@ -37,7 +37,7 @@ welcome to make contributions in this regard.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Plugin lifecycle](#plugin-lifecycle)
-- [Widget Utilities](#widget-utilities)
+- [Utility widgets](#utility-widgets)
   - [KeyboardVisibilityUnfocuser](#keyboardvisibilityunfocuser)
   - [KeyboardVisibilityBuilder](#keyboardvisibilitybuilder)
 - [Troubleshooting](#troubleshooting)
@@ -161,7 +161,7 @@ Future<void> dispose();
 
 Closes stream and releases all plugin resources.
 
-## Widget Utilities
+## Utility widgets
 
 For developers who want a one and done solution, this plugin provides a couple
 of useful widgets to help you handle some common use cases.
