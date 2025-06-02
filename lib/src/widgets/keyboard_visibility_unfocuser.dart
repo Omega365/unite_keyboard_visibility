@@ -48,7 +48,7 @@ class KeyboardVisibilityUnfocuser extends StatefulWidget {
 class _KeyboardVisibilityUnfocuserState
     extends State<KeyboardVisibilityUnfocuser> {
   StreamSubscription? _visibilitySub;
-  KeyboardVisibilityFocusNode? _tempPreviousFocusNode;
+  FocusNode? _tempPreviousFocusNode;
 
   /// [_tempPreviousFocusNode] should be null at the start of a closing
   /// animation session. Call this to check.
@@ -58,12 +58,11 @@ class _KeyboardVisibilityUnfocuserState
     }
   }
 
-  void _handleEvent(
-    KeyboardVisibilityFocusNode focusNode,
-    KeyboardVisibilityStatus status,
-  ) {
-    final effectiveUnfocusMode =
-        focusNode.unfocusMode ?? widget.defaultUnfocusMode;
+  void _handleEvent(FocusNode focusNode, KeyboardVisibilityStatus status) {
+    final unfocusMode =
+        focusNode is KeyboardVisibilityFocusNode ? focusNode.unfocusMode : null;
+    final effectiveUnfocusMode = unfocusMode ?? widget.defaultUnfocusMode;
+
     if (effectiveUnfocusMode == KeyboardVisibilityUnfocusMode.off) {
       return;
     }
@@ -112,7 +111,7 @@ class _KeyboardVisibilityUnfocuserState
       }
 
       final currentFocusNode = FocusManager.instance.primaryFocus;
-      if (currentFocusNode is KeyboardVisibilityFocusNode) {
+      if (currentFocusNode != null) {
         _handleEvent(currentFocusNode, visible);
       }
     });
