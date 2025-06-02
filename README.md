@@ -32,6 +32,18 @@ welcome to make contributions in this regard.
   </tbody>
 </table>
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Plugin lifecycle](#plugin-lifecycle)
+- [Widget Utilities](#widget-utilities)
+  - [KeyboardVisibilityUnfocuser](#keyboardvisibilityunfocuser)
+  - [KeyboardVisibilityBuilder](#keyboardvisibilitybuilder)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Installation
 
 Add the dependency to your `pubspec.yaml`:
@@ -148,6 +160,66 @@ Future<void> dispose();
 ```
 
 Closes stream and releases all plugin resources.
+
+## Widget Utilities
+
+For developers who want a one and done solution, this plugin provides a couple
+of useful widgets to help you handle some common use cases.
+
+### KeyboardVisibilityUnfocuser
+
+Auto unfocus any primary focused widget (for example TextField) when keyboard
+closes.
+
+Simply wrap your app's root widget with `KeyboardVisibilityUnfocuser`:
+
+```dart
+KeyboardVisibilityUnfocuser(
+  child: MyApp(),
+)
+```
+
+You can also customize the unfocus behavior by providing a `defaultUnfocusMode`,
+or disable unfocusing entirely with `enableUnfocusing`:
+
+```dart
+KeyboardVisibilityUnfocuser(
+  // Set to false to disable automatic unfocusing
+  enableUnfocusing: true,
+  // Choose when to unfocus:
+  // eager (as soon as keyboard starts closing) or lazy (after it fully closes)
+  defaultUnfocusMode: KeyboardVisibilityUnfocusMode.eager,
+  child: MyApp(),
+)
+```
+
+To customize unfocusing for individual focusable, use
+`KeyboardVisibilityFocusNode`:
+
+```dart
+TextField(
+  focusNode: KeyboardVisibilityFocusNode(
+    // Override unfocus mode for this node (eager, lazy, or off)
+    unfocusMode: KeyboardVisibilityUnfocusMode.off,
+  ),
+)
+```
+
+### KeyboardVisibilityBuilder
+
+Build a widget that depends on keyboard visibility.
+
+```dart
+KeyboardVisibilityBuilder(
+  builder: (context, status, child) {
+    return Text(
+      status == KeyboardVisibilityStatus.open
+          ? 'Keyboard is visible.'
+          : 'Keyboard is hidden.',
+    );
+  },
+);
+```
 
 ## Troubleshooting
 
