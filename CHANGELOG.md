@@ -1,6 +1,10 @@
+## [Unreleased]
+### Added
+- add `KeyboardVisibilityUnfocuser`
+
 ## [0.1.2] - 2025-06-01
 ### Changed
-- README.md
+- Update README.md
 
 ## [0.1.1] - 2025-06-01
 ### Changed
@@ -14,12 +18,13 @@
 
 ## [0.0.2] - 2025-05-31
 ### Changed
-- Update Readme.md.
+- Update README.md
 
 ## [0.0.1] - 2025-05-28
 ### Added
 - Initial release.
 
+[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.2...HEAD
 [0.1.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.1...0.1.2
 [0.1.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.0.2...0.1.0
