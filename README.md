@@ -63,7 +63,7 @@ void main() async {
 ```
 
 On Android, this plugin defines 4 states of keyboard visibility: `maybeOpen`,
-`maybeClose`, `open` and `close`, which corresponds to:
+`maybeClose`, `open` and `close`, which correspond to:
 
 - `maybeOpen`: The keyboard is moving from `close` to `open` **or** return back
   to `close`.
@@ -113,7 +113,7 @@ final status = visibility.value;
 print('Keyboard is $status');
 ```
 
-Listen to visibility changes, the current value will be emited immediately for
+Listen to visibility changes, the current value will be emitted immediately for
 any new listener:
 
 ```dart
@@ -135,11 +135,11 @@ Future<void> initialize({
 
 Initializes keyboard visibility detection.
 
-- `enableLogging`: Enables internal logging. May affects performance. Defaults
-  to `false`.
+- `enableLogging`: Enables internal logging. May affect performance. Defaults to
+  `false`.
 - `forceFallback`: Forces the fallback implementation
   ([flutter_keyboard_visibility](https://pub.dev/packages/flutter_keyboard_visibility))
-  on Android. Have no effect on iOS. Defaults to `false`.
+  on Android. Has no effect on iOS. Defaults to `false`.
 
 ### Dispose
 
