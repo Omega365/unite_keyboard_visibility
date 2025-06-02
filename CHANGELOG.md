@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added
 - add `KeyboardVisibilityUnfocuser`
+- add `KeyboardVisibilityBuilder`
 
 ## [0.1.2] - 2025-06-01
 ### Changed
