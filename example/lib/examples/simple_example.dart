@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
+import 'package:unite_keyboard_visibility_example/examples/helpers.dart';
 import 'package:unite_keyboard_visibility_example/main.dart';
 
 class SimpleExample extends StatefulWidget {
@@ -15,22 +16,14 @@ class _SimpleExampleState extends State<SimpleExample> {
   /// A subscription to log keyboard visibility changes.
   late final StreamSubscription _visibilitySub;
 
-  /// The current keyboard visibility status.
-  KeyboardVisibilityStatus? _visibilityStatus;
-
   @override
   void initState() {
     super.initState();
 
     // Listen to keyboard visibility change events
-    _visibilitySub = UniteKeyboardVisibility.instance.valueStream.listen((
-      visible,
-    ) {
-      setState(() {
-        _visibilityStatus = visible;
-      });
-      logger.i('Keyboard visibility changed: $visible');
-    });
+    _visibilitySub = UniteKeyboardVisibility.instance.valueStream.listen(
+      (visible) => logger.i('Keyboard visibility changed: $visible'),
+    );
   }
 
   @override
@@ -47,12 +40,7 @@ class _SimpleExampleState extends State<SimpleExample> {
         body: Column(
           children: [
             const SizedBox(height: 16),
-            Text(
-              '${_visibilityStatus?.name}',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
+            const CurrentVisibilityText(),
             const SizedBox(height: 32),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

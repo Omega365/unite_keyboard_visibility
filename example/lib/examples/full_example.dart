@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:unite_keyboard_visibility/unite_keyboard_visibility.dart';
+import 'package:unite_keyboard_visibility_example/examples/helpers.dart';
 import 'package:unite_keyboard_visibility_example/main.dart';
 
 class FullExample extends StatefulWidget {
@@ -14,9 +15,6 @@ class FullExample extends StatefulWidget {
 class _FullExampleState extends State<FullExample> {
   /// A subscription to log keyboard visibility changes.
   late final StreamSubscription _visibilitySub;
-
-  /// The current keyboard visibility status.
-  KeyboardVisibilityStatus? _visibilityStatus;
 
   /// The focus node for the text field in this example.
   final _focusNode = KeyboardVisibilityFocusNode();
@@ -33,12 +31,9 @@ class _FullExampleState extends State<FullExample> {
     super.initState();
 
     // Listen to keyboard visibility change events
-    _visibilitySub = UniteKeyboardVisibility.instance.valueStream.listen((
-      visible,
-    ) {
-      setState(() => _visibilityStatus = visible);
-      logger.i('Keyboard visibility changed: $visible');
-    });
+    _visibilitySub = UniteKeyboardVisibility.instance.valueStream.listen(
+      (visible) => logger.i('Keyboard visibility changed: $visible'),
+    );
   }
 
   @override
@@ -60,12 +55,7 @@ class _FullExampleState extends State<FullExample> {
           body: Column(
             children: [
               const SizedBox(height: 16),
-              Text(
-                '${_visibilityStatus?.name}',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
+              const CurrentVisibilityText(),
               const SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
