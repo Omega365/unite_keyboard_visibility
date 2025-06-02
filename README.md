@@ -15,9 +15,22 @@ WASM support is planned.
 Desktop platforms like macOS, Windows and Linux are not planned. Still, you are
 welcome to make contributions in this regard.
 
-| Basic open-close                                                          | Predictive back                                                                     | Floating keyboard                                                                       |
-| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| <img src="resources/gifs/open-close.gif" alt="open-close" height="480" /> | <img src="resources/gifs/predictive-back.gif" alt="predictive-back" height="480" /> | <img src="resources/gifs/floating-keyboard.gif" alt="floating-keyboard" height="480" /> |
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="33%">Basic open-close</th>
+      <th width="33%">Predictive back</th>
+      <th width="33%">Floating keyboard</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="33%"><img src="resources/gifs/open-close.gif" alt="Basic open-close"/></td>
+      <td width="33%"><img src="resources/gifs/predictive-back.gif" alt="Predictive back"/></td>
+      <td width="33%"><img src="resources/gifs/floating-keyboard.gif" alt="Floating keyboard"/></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Installation
 
