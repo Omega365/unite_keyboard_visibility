@@ -38,7 +38,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  unite_keyboard_visibility: ^0.1.0
+  unite_keyboard_visibility: ^0.1.2
 ```
 
 Then get packages:
