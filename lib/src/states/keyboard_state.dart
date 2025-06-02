@@ -1,5 +1,4 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:meta/meta.dart';
 
 part 'keyboard_state.mapper.dart';
 
@@ -17,13 +16,11 @@ enum KeyboardVisibilityStatus {
   /// The keyboard is closing but not fully finished.
   maybeClose;
 
-  /// Extension method for [KeyboardVisibilityStatus] to graduate uncertain
-  /// states to definite ones.
+  /// Graduate uncertain states to definite ones.
   ///
   /// - [maybeOpen] is treated as [open].
   /// - [maybeClose] is treated as [close].
   /// - [open] and [close] remain unchanged.
-  @internal
   KeyboardVisibilityStatus graduate() {
     switch (this) {
       case KeyboardVisibilityStatus.open:
