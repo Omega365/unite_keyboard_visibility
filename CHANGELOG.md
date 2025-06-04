@@ -1,20 +1,23 @@
 ## [0.2.2] - 2025-06-04
+### Changed
+- Update README.md regarding `KeyboardVisibilityFocusNode`.
+
 ## [0.2.1] - 2025-06-03
 ### Changed
-- Update README.md
+- Update README.md.
 
 ## [0.2.0] - 2025-06-02
 ### Added
-- add `KeyboardVisibilityUnfocuser`
-- add `KeyboardVisibilityBuilder`
+- add `KeyboardVisibilityUnfocuser`.
+- add `KeyboardVisibilityBuilder`.
 
 ## [0.1.2] - 2025-06-01
 ### Changed
-- Update README.md
+- Update README.md.
 
 ## [0.1.1] - 2025-06-01
 ### Changed
-- Update README.md
+- Update README.md.
 
 ## [0.1.0] - 2025-06-01
 ### Changed
@@ -24,7 +27,7 @@
 
 ## [0.0.2] - 2025-05-31
 ### Changed
-- Update README.md
+- Update README.md.
 
 ## [0.0.1] - 2025-05-28
 ### Added
