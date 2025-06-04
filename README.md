@@ -197,12 +197,31 @@ To customize unfocusing for individual focusable, use
 `KeyboardVisibilityFocusNode`:
 
 ```dart
-TextField(
-  focusNode: KeyboardVisibilityFocusNode(
-    // Override unfocus mode for this node (eager, lazy, or off)
-    unfocusMode: KeyboardVisibilityUnfocusMode.off,
-  ),
-)
+class MyWidget extends StatefulWidget {
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  // Initialize the KeyboardVisibilityFocusNode.
+  final focusNode = KeyboardVisibilityFocusNode(
+    unfocusMode: KeyboardVisibilityUnfocusMode.eager,
+  );
+
+  @override
+  void dispose() {
+    // Dispose the focusNode when the widget is disposed.
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      focusNode: focusNode,
+    );
+  }
+}
 ```
 
 ### KeyboardVisibilityBuilder
