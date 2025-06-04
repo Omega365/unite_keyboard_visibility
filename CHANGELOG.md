@@ -1,3 +1,7 @@
+## [0.2.3] - 2025-06-04
+### Changed
+- Fix broken changelog links.
+
 ## [0.2.2] - 2025-06-04
 ### Changed
 - Update README.md regarding `KeyboardVisibilityFocusNode`.
@@ -33,11 +37,12 @@
 ### Added
 - Initial release.
 
-[0.2.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.2.1...0.2.2
-[0.2.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.2.0...0.2.1
-[0.2.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.2...0.2.0
-[0.1.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.1...0.1.2
-[0.1.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.1.0...0.1.1
-[0.1.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.0.2...0.1.0
-[0.0.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/0.0.1...0.0.2
-[0.0.1]: https://github.com/VinhNgT/unite_keyboard_visibility/releases/tag/0.0.1
+[0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.0.2...v0.1.0
+[0.0.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.0.1...v0.0.2
+[0.0.1]: https://github.com/VinhNgT/unite_keyboard_visibility/releases/tag/v0.0.1
