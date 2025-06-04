@@ -39,6 +39,7 @@ class _FullExampleState extends State<FullExample> {
   @override
   void dispose() {
     _visibilitySub.cancel();
+    _focusNode.dispose();
     super.dispose();
   }
 
