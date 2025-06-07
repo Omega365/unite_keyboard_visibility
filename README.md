@@ -175,7 +175,7 @@ Simply wrap your app's root widget with `KeyboardVisibilityUnfocuser`:
 
 ```dart
 KeyboardVisibilityUnfocuser(
-  child: MyApp(),
+  child: const MyApp(),
 )
 ```
 
@@ -189,7 +189,7 @@ KeyboardVisibilityUnfocuser(
   // Choose when to unfocus:
   // eager (as soon as keyboard starts closing) or lazy (after it fully closes)
   defaultUnfocusMode: KeyboardVisibilityUnfocusMode.eager,
-  child: MyApp(),
+  child: const MyApp(),
 )
 ```
 

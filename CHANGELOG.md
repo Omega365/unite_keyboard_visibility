@@ -1,3 +1,7 @@
+## [Unreleased]
+### Changed
+- use `const MyApp()` in README.md examples.
+
 ## [0.2.3] - 2025-06-04
 ### Changed
 - Fix broken changelog links.
@@ -37,6 +41,7 @@
 ### Added
 - Initial release.
 
+[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...vHEAD
 [0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.0...v0.2.1
