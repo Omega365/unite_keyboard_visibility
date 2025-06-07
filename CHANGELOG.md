@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Changed
 - use `const MyApp()` in README.md examples.
+- minor code refactor
 
 ## [0.2.3] - 2025-06-04
 ### Changed

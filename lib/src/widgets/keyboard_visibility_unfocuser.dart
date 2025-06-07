@@ -5,21 +5,6 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 import 'package:unite_keyboard_visibility/src/unite_keyboard_visibility.dart';
 import 'package:unite_keyboard_visibility/src/widgets/keyboard_visibility_focus_node.dart';
 
-/// The mode that determines how and when a [FocusNode] should unfocus when the
-/// keyboard is hidden.
-enum KeyboardVisibilityUnfocusMode {
-  /// Unfocuses as soon as the keyboard is in
-  /// [KeyboardVisibilityStatus.maybeClose]. And refocuses immediately if the
-  /// keyboard returns to [KeyboardVisibilityStatus.open].
-  eager,
-
-  /// Unfocuses only after the keyboard is fully closed.
-  lazy,
-
-  /// Disables automatic unfocusing for the node.
-  off,
-}
-
 /// A widget that manages keyboard visibility and automatically unfocuses any
 /// primary focused [KeyboardVisibilityFocusNode] when the keyboard is
 /// dismissed.
