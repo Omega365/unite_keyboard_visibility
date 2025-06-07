@@ -1,7 +1,7 @@
-## [Unreleased]
+## [0.2.4] - 2025-06-07
 ### Changed
-- use `const MyApp()` in README.md examples.
-- minor code refactor
+- Use `const MyApp()` in README.md examples.
+- Minor code refactor.
 
 ## [0.2.3] - 2025-06-04
 ### Changed
@@ -17,8 +17,8 @@
 
 ## [0.2.0] - 2025-06-02
 ### Added
-- add `KeyboardVisibilityUnfocuser`.
-- add `KeyboardVisibilityBuilder`.
+- Add `KeyboardVisibilityUnfocuser`.
+- Add `KeyboardVisibilityBuilder`.
 
 ## [0.1.2] - 2025-06-01
 ### Changed
@@ -42,7 +42,7 @@
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...vHEAD
+[0.2.4]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.0...v0.2.1
