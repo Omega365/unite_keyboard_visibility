@@ -1,3 +1,7 @@
+## [0.3.0] - 2025-06-14
+### Changed
+- Drop `dart_mappable` constraint to `^4.3.1`.
+
 ## [0.2.4] - 2025-06-07
 ### Changed
 - Use `const MyApp()` in README.md examples.
@@ -42,6 +46,7 @@
 ### Added
 - Initial release.
 
+[0.3.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.1...v0.2.2
