@@ -22,7 +22,7 @@ dependencies:
   flutter_keyboard_visibility_temp_fork: ^0.1.5
 
   # Models.
-  dart_mappable: ^4.5.0
+  dart_mappable: ^4.3.1
 
   # Utils.
   rxdart: ^0.28.0
