@@ -1,15 +1,6 @@
 import 'package:pigeon/pigeon.dart';
 
-class AndroidKeyboardVisibilityStateResponse {
-  const AndroidKeyboardVisibilityStateResponse({
-    required this.isVisible,
-    required this.bottomInsetDevicePixels,
-  });
-
-  final bool isVisible;
-  final int bottomInsetDevicePixels;
-}
-
+//
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/generated/messages.g.dart',
@@ -22,6 +13,18 @@ class AndroidKeyboardVisibilityStateResponse {
     dartPackageName: 'com.vinhngt.unite_keyboard_visibility',
   ),
 )
+//
+
+class AndroidKeyboardVisibilityStateResponse {
+  const AndroidKeyboardVisibilityStateResponse({
+    required this.isVisible,
+    required this.bottomInsetDevicePixels,
+  });
+
+  final bool isVisible;
+  final int bottomInsetDevicePixels;
+}
+
 @HostApi()
 abstract class AndroidKeyboardVisibilityHostApi {
   AndroidKeyboardVisibilityStateResponse getVisibilityStateFromRootView();
