@@ -70,7 +70,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
   // View initialization and configuration starts here
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    view = binding.activity.window.decorView  // capture root view.
+    view = binding.activity.findViewById<View>(android.R.id.content)
 
     log("onAttachedToActivity view=${describeView(view)}")
     view?.let { setupViewListeners(it) }
@@ -84,7 +84,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    view = binding.activity.window.decorView  // recapture after config change.
+    view = binding.activity.findViewById<View>(android.R.id.content)
 
     log("onReattachedToActivityForConfigChanges view=${describeView(view)}}")
     view?.let { setupViewListeners(it) }
@@ -95,7 +95,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
     log("onDetachedFromActivityForConfigChanges cleaning view=${describeView(view)}")
     view?.let { cleanupViewListeners(it) }
     view = null
-    }
+  }
 
   // Helpers functions start here
 
