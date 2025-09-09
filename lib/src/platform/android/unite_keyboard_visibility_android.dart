@@ -76,7 +76,7 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
 
     // The current state will be removed after every Hot-Restart so we need to
     // query it again to ensure we always have a valid initial value.
-    await Future.microtask(() async {
+    await Future(() async {
       if (_resultStreamCtl.hasValue) {
         return;
       }
