@@ -63,6 +63,8 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
       level: enableLogging ? Level.all : Level.off,
     );
 
+    logger.d('Initializing Android implementation');
+
     _flutterApi = _AndroidKeyboardFlutterApiHandler(logger: logger);
     AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApi);
 
@@ -79,6 +81,7 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
         return;
       }
 
+      logger.d('Querying initial keyboard state from Android');
       final AndroidKeyboardVisibilityState currentState =
           await _queryCurrentState();
 

@@ -1,6 +1,8 @@
 package com.vinhngt.unite_keyboard_visibility
 
+import android.util.Log
 import android.view.View
+import android.content.res.Resources
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,16 +17,53 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
   AndroidKeyboardVisibilityHostApi {
   private lateinit var flutterApi: AndroidKeyboardVisibilityFlutterApi
+
+  private val nativeLoggingEnabled: Boolean = false
   private var view: View? = null
+
+  companion object {
+    private const val TAG = "UKV_Android"
+  }
+
+  private fun log(message: String) {
+    if (nativeLoggingEnabled) {
+      Log.d(TAG, message)
+    }
+  }
+
+  /**
+   * Returns a concise description of a view for logging purposes.
+   */
+  private fun describeView(v: View?): String {
+    if (v == null) return "<null view>"
+    val cls = v::class.java.simpleName
+    val hash = System.identityHashCode(v)
+    val idDesc = try {
+      if (v.id != View.NO_ID) {
+        val entry = try {
+          v.resources.getResourceEntryName(v.id)
+        } catch (e: Resources.NotFoundException) {
+          "res-not-found"
+        }
+        "@id/$entry(${v.id})"
+      } else "no-id"
+    } catch (e: Exception) {
+      "id-error"
+    }
+    return "$cls#$hash $idDesc"
+  }
+
 
   // Plugin initialization starts here
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    log("onAttachedToEngine")
     flutterApi = AndroidKeyboardVisibilityFlutterApi(flutterPluginBinding.binaryMessenger)
     AndroidKeyboardVisibilityHostApi.setUp(flutterPluginBinding.binaryMessenger, this)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    log("onDetachedFromEngine")
     AndroidKeyboardVisibilityHostApi.setUp(binding.binaryMessenger, null)
   }
 
@@ -32,25 +71,31 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     view = binding.activity.window.decorView  // capture root view.
+
+    log("onAttachedToActivity view=${describeView(view)}")
     view?.let { setupViewListeners(it) }
 //    view?.requestApplyInsets()
   }
 
   override fun onDetachedFromActivity() {
+    log("onDetachedFromActivity cleaning view=${describeView(view)}")
     view?.let { cleanupViewListeners(it) }
     view = null
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     view = binding.activity.window.decorView  // recapture after config change.
+
+    log("onReattachedToActivityForConfigChanges view=${describeView(view)}}")
     view?.let { setupViewListeners(it) }
 //    view?.requestApplyInsets()
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
+    log("onDetachedFromActivityForConfigChanges cleaning view=${describeView(view)}")
     view?.let { cleanupViewListeners(it) }
     view = null
-  }
+    }
 
   // Helpers functions start here
 
@@ -72,7 +117,6 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
   ): AndroidKeyboardVisibilityStateResponse {
     val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
     val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom.toLong()
-
     return AndroidKeyboardVisibilityStateResponse(isVisible = imeVisible, imeHeight)
   }
 
@@ -80,6 +124,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
    * Registers a callback on the given view to report keyboard inset animation events.
    */
   private fun registerImeAnimationCallback(view: View) {
+    log("registerImeAnimationCallback for ${describeView(view)}")
     ViewCompat.setWindowInsetsAnimationCallback(
       view,
       object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_CONTINUE_ON_SUBTREE) {
@@ -124,6 +169,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
    * Registers a callback on the given view to report keyboard inset visibility events.
    */
   private fun registerImeVisibilityCallback(view: View) {
+    log("registerImeVisibilityCallback for ${describeView(view)}")
     ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
       flutterApi.onVisibilityChanged(getKeyboardStateResponseFromInset(insets)) { _ -> }
       insets
@@ -134,6 +180,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
    * Registers callbacks for all keyboard events.
    */
   private fun setupViewListeners(v: View) {
+    log("setupViewListeners for ${describeView(v)}")
     registerImeAnimationCallback(v)
     registerImeVisibilityCallback(v)
   }
@@ -142,6 +189,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
    * Unregisters callbacks for all keyboard events to clean up resources.
    */
   private fun cleanupViewListeners(v: View) {
+    log("cleanupViewListeners for ${describeView(v)}")
     ViewCompat.setWindowInsetsAnimationCallback(v, null)
     ViewCompat.setOnApplyWindowInsetsListener(v, null)
   }
