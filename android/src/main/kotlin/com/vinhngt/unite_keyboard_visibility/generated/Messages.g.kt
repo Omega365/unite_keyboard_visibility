@@ -133,9 +133,13 @@ private open class MessagesPigeonCodec : StandardMessageCodec() {
   }
 }
 
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface AndroidKeyboardVisibilityHostApi {
-  fun getVisibilityStateFromRootView(): AndroidKeyboardVisibilityStateResponse
+  /** Enable or disable the host keyboard visibility listeners. */
+  fun setListenersEnabled(enabled: Boolean)
+  /** Query the current keyboard visibility state. */
+  fun getVisibility(callback: (Result<AndroidKeyboardVisibilityStateResponse>) -> Unit)
 
   companion object {
     /** The codec used by AndroidKeyboardVisibilityHostApi. */
@@ -147,15 +151,36 @@ interface AndroidKeyboardVisibilityHostApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: AndroidKeyboardVisibilityHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibilityStateFromRootView$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.setListenersEnabled$separatedMessageChannelSuffix", codec)
         if (api != null) {
-          channel.setMessageHandler { _, reply ->
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val enabledArg = args[0] as Boolean
             val wrapped: List<Any?> = try {
-              listOf(api.getVisibilityStateFromRootView())
+              api.setListenersEnabled(enabledArg)
+              listOf(null)
             } catch (exception: Throwable) {
               MessagesPigeonUtils.wrapError(exception)
             }
             reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.com.vinhngt.unite_keyboard_visibility.AndroidKeyboardVisibilityHostApi.getVisibility$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getVisibility{ result: Result<AndroidKeyboardVisibilityStateResponse> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(MessagesPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(MessagesPigeonUtils.wrapResult(data))
+              }
+            }
           }
         } else {
           channel.setMessageHandler(null)

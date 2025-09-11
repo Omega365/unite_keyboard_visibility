@@ -1,6 +1,3 @@
-import 'package:pigeon/pigeon.dart';
-
-//
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/src/generated/messages.g.dart',
@@ -13,7 +10,10 @@ import 'package:pigeon/pigeon.dart';
     dartPackageName: 'com.vinhngt.unite_keyboard_visibility',
   ),
 )
-//
+
+library;
+
+import 'package:pigeon/pigeon.dart';
 
 class AndroidKeyboardVisibilityStateResponse {
   const AndroidKeyboardVisibilityStateResponse({
@@ -27,7 +27,12 @@ class AndroidKeyboardVisibilityStateResponse {
 
 @HostApi()
 abstract class AndroidKeyboardVisibilityHostApi {
-  AndroidKeyboardVisibilityStateResponse getVisibilityStateFromRootView();
+  /// Enable or disable the host keyboard visibility listeners.
+  void setListenersEnabled(bool enabled);
+
+  /// Query the current keyboard visibility state.
+  @async
+  AndroidKeyboardVisibilityStateResponse getVisibility();
 }
 
 @FlutterApi()

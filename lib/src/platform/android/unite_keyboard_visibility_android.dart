@@ -35,7 +35,7 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   /// Queries the current keyboard visibility state from the native Android
   /// code.
   Future<AndroidKeyboardVisibilityState> _queryCurrentState() async {
-    final response = await _hostApi.getVisibilityStateFromRootView();
+    final response = await _hostApi.getVisibility();
     return AndroidKeyboardVisibilityState.fromResponse(
       response,
       isMaybe: _flutterApi.isInAnimationSession,
@@ -66,7 +66,9 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     logger.d('Initializing Android implementation');
 
     _flutterApi = _AndroidKeyboardFlutterApiHandler(logger: logger);
+
     AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApi);
+    await _hostApi.setListenersEnabled(true);
 
     // Start listening to the keyboard visibility verdicts.
     _verdictStreamSubscription = _flutterApi.visibilityVerdictStream
@@ -87,7 +89,6 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
 
       // Check again due to async gap.
       if (!_resultStreamCtl.hasValue) {
-        logger.d('Hot-Restart detected, adding initial state');
         _resultStreamCtl.add(currentState.status);
       }
     });
