@@ -20,20 +20,6 @@
       },
       "runOptions": {
         "instanceLimit": 1
-      },
-      "problemMatcher": {
-        "base": "$dart-build_runner",
-        "pattern": {
-          "regexp": "^\\[(WARNING|SEVERE)\\] (.*)",
-          "severity": 1,
-          "message": 2,
-          "file": 99 // A hack to ignore file match
-        },
-        "background": {
-          "activeOnStart": false,
-          "beginsPattern": "^(\\[INFO\\] Starting Build|\\[INFO\\] Generating build|\\[INFO\\] Building)",
-          "endsPattern": "^(\\[INFO\\] Succeeded|\\[SEVERE\\] Failed|\\[INFO\\] Builds finished)"
-        }
       }
     },
     {
