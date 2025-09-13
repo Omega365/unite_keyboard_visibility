@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:unite_keyboard_visibility/src/platform/fallback/unite_keyboard_visibility_fallback.dart';
 import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
 import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
@@ -60,10 +61,16 @@ class UniteKeyboardVisibility {
     bool enableLogging = false,
     bool forceFallback = false,
   }) async {
-    await _platformInstance.initialize(
-      enableLogging: enableLogging,
-      forceFallback: forceFallback,
-    );
+    if (forceFallback) {
+      UniteKeyboardVisibilityFallback.registerWith();
+      await UniteKeyboardVisibility.instance.initialize(
+        enableLogging: enableLogging,
+        forceFallback: forceFallback,
+      );
+      return;
+    }
+
+    await _platformInstance.initialize(enableLogging: enableLogging);
     _isInitialized = true;
   }
 

@@ -23,10 +23,7 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
   );
 
   @override
-  Future<void> initialize({
-    required bool enableLogging,
-    required bool forceFallback,
-  }) async {
+  Future<void> initialize({required bool enableLogging}) async {
     final keyboardVisibilityController = KeyboardVisibilityController();
 
     // Start listening to the keyboard visibility verdicts.

@@ -4,11 +4,9 @@ import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_errors.dart';
-import 'package:unite_keyboard_visibility/src/platform/fallback/unite_keyboard_visibility_fallback.dart';
 import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
 import 'package:unite_keyboard_visibility/src/states/android_keyboard_state.dart';
 import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
-import 'package:unite_keyboard_visibility/src/unite_keyboard_visibility.dart';
 
 class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   /// Registers this class as the default instance of
@@ -43,20 +41,7 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   }
 
   @override
-  Future<void> initialize({
-    required bool enableLogging,
-    required bool forceFallback,
-  }) async {
-    if (forceFallback) {
-      UniteKeyboardVisibilityFallback.registerWith();
-      await UniteKeyboardVisibility.instance.initialize(
-        enableLogging: enableLogging,
-        forceFallback: forceFallback,
-      );
-
-      return;
-    }
-
+  Future<void> initialize({required bool enableLogging}) async {
     /// The logger instance for logging events.
     final logger = Logger(
       printer: SimplePrinter(colors: false, printTime: true),

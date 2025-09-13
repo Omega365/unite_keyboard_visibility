@@ -26,10 +26,7 @@ abstract class UniteKeyboardVisibilityPlatform extends PlatformInterface {
   // Below are the methods that must be implemented by platform-specific
   // implementations of this interface.
 
-  Future<void> initialize({
-    required bool enableLogging,
-    required bool forceFallback,
-  });
+  Future<void> initialize({required bool enableLogging});
   Future<void> dispose();
 
   KeyboardVisibilityStatus get value;
