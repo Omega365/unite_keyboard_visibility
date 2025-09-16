@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.4.0] - 2025-09-16
 ### Changed
 - Bump `sdk` to `^3.3.0` and `flutter` to `>=3.19.0`.
 - Drop `meta` to `^1.11.0` to support Flutter `3.19.0` and above.
@@ -57,7 +57,7 @@
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.3.0...vHEAD
+[0.4.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
