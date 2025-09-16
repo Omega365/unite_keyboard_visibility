@@ -1,3 +1,14 @@
+## [Unreleased]
+### Changed
+- Bump `sdk` to `^3.3.0` and `flutter` to `>=3.19.0`.
+- Drop `meta` to `^1.11.0` to support Flutter `3.19.0` and above.
+
+### Deprecated
+- Deprecate `KeyboardVisibilityStatus.graduate` since it is no longer in use.
+
+### Fixed
+- Fix a rare race condition on Android that causes the app to crash when the plugin initializes before the Flutter activity starts.
+
 ## [0.3.0] - 2025-06-14
 ### Changed
 - Drop `dart_mappable` constraint to `^4.3.1`.
@@ -46,6 +57,7 @@
 ### Added
 - Initial release.
 
+[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.3.0...vHEAD
 [0.3.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.2...v0.2.3
