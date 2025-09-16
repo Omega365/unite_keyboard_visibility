@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/widgets/keyboard_visibility_unfocuser.dart';
 
 /// The mode that determines how and when a [FocusNode] should unfocus when the

@@ -1,13 +1,36 @@
-import 'package:unite_keyboard_visibility/src/states/android_keyboard_state.dart';
+import 'package:meta/meta.dart';
+import 'package:unite_keyboard_visibility/src/domain/android_keyboard_state.dart';
 
-const _reportMessage = 'This should never happen, '
-    'if you encounter this then it\'s either a bug in the plugin '
-    'or the operating system behaves in a way that is not expected. '
-    'Please take a look at the plugin\'s issue tracker '
-    'for possible workarounds and report this issue '
-    'if it\'s not already reported.';
+class PluginUninitializedError extends Error {
+  @override
+  String toString() => 'UniteKeyboardVisibility has not been initialized. '
+      'Please call UniteKeyboardVisibility.instance.initialize() '
+      'before using.';
+}
 
-class AndroidKeyboardVisibilityStateContractViolation extends Error {
+class PluginInitializedError extends Error {
+  @override
+  String toString() => 'UniteKeyboardVisibility has already been initialized. '
+      'You must call UniteKeyboardVisibility.instance.dispose() first '
+      'before initializing it again.';
+}
+
+abstract class AndroidKeyboardVisibilityContractViolation extends Error {
+  /// Creates an error indicating a contract violation in the Android keyboard
+  /// visibility handling.
+  AndroidKeyboardVisibilityContractViolation();
+
+  @protected
+  final reportMessage = 'This should never happen, '
+      'if you encounter this then it\'s either a bug in the plugin '
+      'or the operating system behaves in a way that is not expected. '
+      'Please take a look at the plugin\'s issue tracker '
+      'for possible workarounds and report this issue '
+      'if it\'s not already reported.';
+}
+
+class AndroidKeyboardVisibilityStateContractViolation
+    extends AndroidKeyboardVisibilityContractViolation {
   /// Creates an error indicating a contract violation in the Android keyboard
   /// state handling.
   AndroidKeyboardVisibilityStateContractViolation({
@@ -26,10 +49,11 @@ class AndroidKeyboardVisibilityStateContractViolation extends Error {
       'Previous visibility state: $previousVisibilityState\n'
       'Previous animation state: $previousAnimationState\n'
       'Next visibility state: $nextVisibilityState\n\n'
-      '$_reportMessage';
+      '$reportMessage';
 }
 
-class AndroidKeyboardAnimationStateContractViolation extends Error {
+class AndroidKeyboardAnimationStateContractViolation
+    extends AndroidKeyboardVisibilityContractViolation {
   /// Creates an error indicating a contract violation in the Android keyboard
   /// animation state handling.
   AndroidKeyboardAnimationStateContractViolation({
@@ -48,5 +72,5 @@ class AndroidKeyboardAnimationStateContractViolation extends Error {
       'Previous visibility state: $previousVisibilityState\n'
       'Previous animation state: $previousAnimationState\n'
       'Next animation state: $nextAnimationState\n\n'
-      '$_reportMessage';
+      '$reportMessage';
 }

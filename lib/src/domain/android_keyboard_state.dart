@@ -1,45 +1,43 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 
 part 'android_keyboard_state.mapper.dart';
 
 /// Represents the android keyboard state.
 @MappableClass()
-class AndroidKeyboardVisibilityState extends KeyboardVisibilityState
+class AndroidKeyboardVisibilityState
     with AndroidKeyboardVisibilityStateMappable {
   const AndroidKeyboardVisibilityState({
-    required super.status,
+    required this.isVisible,
     required this.bottomInsetDevicePixels,
   });
 
-  factory AndroidKeyboardVisibilityState.fromResponse(
-    AndroidKeyboardVisibilityStateResponse response, {
-    required bool isMaybe,
-  }) {
-    final status = response.isVisible
-        ? (isMaybe
-            ? KeyboardVisibilityStatus.maybeOpen
-            : KeyboardVisibilityStatus.open)
-        : (isMaybe
-            ? KeyboardVisibilityStatus.maybeClose
-            : KeyboardVisibilityStatus.close);
-
-    return AndroidKeyboardVisibilityState(
-      status: status,
-      bottomInsetDevicePixels: response.bottomInsetDevicePixels,
-    );
-  }
+  /// Whether the keyboard is visible or not.
+  final bool isVisible;
 
   /// The bottom inset of the keyboard in device pixels.
   final int bottomInsetDevicePixels;
+
+  KeyboardVisibilityStatus toKeyboardVisibilityStatus({
+    required bool isDuringAnimation,
+  }) {
+    if (isVisible) {
+      return isDuringAnimation
+          ? KeyboardVisibilityStatus.maybeOpen
+          : KeyboardVisibilityStatus.open;
+    } else {
+      return isDuringAnimation
+          ? KeyboardVisibilityStatus.maybeClose
+          : KeyboardVisibilityStatus.close;
+    }
+  }
 }
 
 /// Represents the android keyboard animation state.
 @MappableClass()
 abstract class AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateMappable {
-  const AndroidKeyboardAnimationState({required this.currentVerdict});
+  const AndroidKeyboardAnimationState();
 
   const factory AndroidKeyboardAnimationState.onPrepare() =
       AndroidKeyboardAnimationStatePrepare;
@@ -47,27 +45,21 @@ abstract class AndroidKeyboardAnimationState
   const factory AndroidKeyboardAnimationState.onStart({
     required int lowerBoundDevicePixels,
     required int upperBoundDevicePixels,
-    required KeyboardVisibilityStatus currentVerdict,
   }) = AndroidKeyboardAnimationStateStart;
 
   const factory AndroidKeyboardAnimationState.onProgress({
     required AndroidKeyboardVisibilityState visibilityState,
-    required KeyboardVisibilityStatus currentVerdict,
   }) = AndroidKeyboardAnimationStateProgress;
 
-  const factory AndroidKeyboardAnimationState.onEnd({
-    required KeyboardVisibilityStatus currentVerdict,
-  }) = AndroidKeyboardAnimationStateEnd;
-
-  /// The keyboard visibility status at the time of the animation state.
-  final KeyboardVisibilityStatus? currentVerdict;
+  const factory AndroidKeyboardAnimationState.onEnd() =
+      AndroidKeyboardAnimationStateEnd;
 }
 
 /// Represents the keyboard animation state when it is preparing to start.
 @MappableClass()
 class AndroidKeyboardAnimationStatePrepare extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStatePrepareMappable {
-  const AndroidKeyboardAnimationStatePrepare() : super(currentVerdict: null);
+  const AndroidKeyboardAnimationStatePrepare();
 }
 
 /// Represents the keyboard animation state when it starts.
@@ -77,7 +69,6 @@ class AndroidKeyboardAnimationStateStart extends AndroidKeyboardAnimationState
   const AndroidKeyboardAnimationStateStart({
     required this.lowerBoundDevicePixels,
     required this.upperBoundDevicePixels,
-    required super.currentVerdict,
   });
 
   /// The lower bound of the keyboard animation in device pixels.
@@ -92,10 +83,7 @@ class AndroidKeyboardAnimationStateStart extends AndroidKeyboardAnimationState
 class AndroidKeyboardAnimationStateProgress
     extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateProgressMappable {
-  const AndroidKeyboardAnimationStateProgress({
-    required this.visibilityState,
-    required super.currentVerdict,
-  });
+  const AndroidKeyboardAnimationStateProgress({required this.visibilityState});
 
   /// The state of the keyboard animation.
   final AndroidKeyboardVisibilityState visibilityState;
@@ -105,5 +93,5 @@ class AndroidKeyboardAnimationStateProgress
 @MappableClass()
 class AndroidKeyboardAnimationStateEnd extends AndroidKeyboardAnimationState
     with AndroidKeyboardAnimationStateEndMappable {
-  const AndroidKeyboardAnimationStateEnd({required super.currentVerdict});
+  const AndroidKeyboardAnimationStateEnd();
 }

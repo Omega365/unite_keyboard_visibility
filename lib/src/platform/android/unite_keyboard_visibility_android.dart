@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:logger/logger.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:unite_keyboard_visibility/src/domain/android_keyboard_state.dart';
+import 'package:unite_keyboard_visibility/src/domain/exceptions.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
-import 'package:unite_keyboard_visibility/src/platform/android/android_errors.dart';
+import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_animation_session.dart';
+import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_api_handlers.dart';
+import 'package:unite_keyboard_visibility/src/platform/keyboard_visibility_delegate.dart';
 import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
-import 'package:unite_keyboard_visibility/src/states/android_keyboard_state.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
 class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   /// Registers this class as the default instance of
@@ -16,376 +19,175 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
   }
 
   /// The Flutter API for receiving events from the native Android code.
-  late final _AndroidKeyboardFlutterApiHandler _flutterApi;
+  final AndroidKeyboardVisibilityFlutterApiHandler _flutterApiHandler =
+      AndroidKeyboardVisibilityFlutterApiHandler();
 
-  // The host API for communicating with the native Android code.
-  final _hostApi = AndroidKeyboardVisibilityHostApi();
-
-  /// The stream subscription for listening to keyboard visibility verdicts.
-  late final StreamSubscription _verdictStreamSubscription;
-
-  /// The stream controller for the emiting the final keyboard visibility
-  /// status.
-  final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>(
-    sync: true,
+  /// The host API for communicating with the native Android code.
+  final AndroidKeyboardVisibilityHostApiClient _androidHostApi =
+      AndroidKeyboardVisibilityHostApiClientPigeonAdapter(
+    AndroidKeyboardVisibilityHostApi(),
   );
 
-  /// Queries the current keyboard visibility state from the native Android
-  /// code.
-  Future<AndroidKeyboardVisibilityState> _queryCurrentState() async {
-    final response = await _hostApi.getVisibility();
-    return AndroidKeyboardVisibilityState.fromResponse(
-      response,
-      isMaybe: _flutterApi.isInAnimationSession,
-    );
-  }
+  /// The delegate that handles the actual keyboard visibility detection and
+  /// state management.
+  KeyboardVisibilityDelegate _delegate = PluginUninitializedDelegate();
+
+  @override
+  bool get isInitialized => _delegate is! PluginUninitializedDelegate;
 
   @override
   Future<void> initialize({required bool enableLogging}) async {
-    /// The logger instance for logging events.
-    final logger = Logger(
-      printer: SimplePrinter(colors: false, printTime: true),
-      level: enableLogging ? Level.all : Level.off,
+    if (isInitialized) {
+      throw PluginInitializedError();
+    }
+
+    _delegate = _UniteKeyboardVisibilityAndroidDelegate(
+      logger: Logger(
+        printer: SimplePrinter(colors: false, printTime: true),
+        level: enableLogging ? Level.all : Level.off,
+      ),
+      flutterApiController: _flutterApiHandler,
+      hostApiController: _androidHostApi,
     );
 
-    logger.d('Initializing Android implementation');
+    AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApiHandler);
+    await _delegate.initialize();
+  }
 
-    _flutterApi = _AndroidKeyboardFlutterApiHandler(logger: logger);
+  @override
+  Future<void> dispose() async {
+    await _delegate.dispose();
+    _delegate = PluginUninitializedDelegate();
+    AndroidKeyboardVisibilityFlutterApi.setUp(null);
+  }
 
-    AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApi);
-    await _hostApi.setListenersEnabled(true);
+  @override
+  KeyboardVisibilityStatus get value => _delegate.value;
 
-    // Start listening to the keyboard visibility verdicts.
-    _verdictStreamSubscription = _flutterApi.visibilityVerdictStream
-        .doOnData((event) => logger.d('Final verdict: ${event.name}'))
-        .distinct()
-        .listen(_resultStreamCtl.add);
+  @override
+  ValueStream<KeyboardVisibilityStatus> get valueStream =>
+      _delegate.valueStream;
+}
 
-    // The current state will be removed after every Hot-Restart so we need to
-    // query it again to ensure we always have a valid initial value.
-    await Future(() async {
-      if (_resultStreamCtl.hasValue) {
-        return;
-      }
+/// Internal delegate that serves as the main orchestrator for Android keyboard
+/// visibility detection.
+class _UniteKeyboardVisibilityAndroidDelegate
+    implements KeyboardVisibilityDelegate {
+  _UniteKeyboardVisibilityAndroidDelegate({
+    required Logger logger,
+    required AndroidKeyboardVisibilityFlutterApiService flutterApiController,
+    required AndroidKeyboardVisibilityHostApiClient hostApiController,
+  })  : _logger = logger,
+        _flutterApiController = flutterApiController,
+        _hostApiController = hostApiController;
 
-      logger.d('Querying initial keyboard state from Android');
-      final AndroidKeyboardVisibilityState currentState =
-          await _queryCurrentState();
+  /// The logger instance for logging API events.
+  final Logger _logger;
 
-      // Check again due to async gap.
-      if (!_resultStreamCtl.hasValue) {
-        _resultStreamCtl.add(currentState.status);
-      }
-    });
+  /// The Flutter API for receiving events from the native Android code.
+  final AndroidKeyboardVisibilityFlutterApiService _flutterApiController;
+
+  /// The host API for communicating with the native Android code.
+  final AndroidKeyboardVisibilityHostApiClient _hostApiController;
+
+  /// The stream controller for emitting the final keyboard visibility status.
+  late final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>(
+    sync: true,
+    onListen: () async => _hostApiController.setListenersEnabled(true),
+    onCancel: () async => _hostApiController.setListenersEnabled(false),
+  );
+
+  /// Subscription to the visibility state stream from native Android.
+  StreamSubscription<AndroidKeyboardVisibilityState>?
+      _visibilityStreamSubscription;
+
+  /// Subscription to the animation state stream from native Android.
+  StreamSubscription<AndroidKeyboardAnimationState>?
+      _animationStreamSubscription;
+
+  /// The current active animation session, if any.
+  ///
+  /// Created when an animation prepare event is received and destroyed when the
+  /// animation ends. Used to track and validate the animation state sequence.
+  AndroidKeyboardAnimationSession? _animationSession;
+
+  /// Handles incoming visibility state changes from the native Android side.
+  void _handleNextVisibilityState(AndroidKeyboardVisibilityState nextState) {
+    _logger.d(nextState);
+
+    _animationSession?.registerVisibilityState(nextState);
+    _resultStreamCtl.add(
+      nextState.toKeyboardVisibilityStatus(
+        isDuringAnimation: _animationSession != null,
+      ),
+    );
+  }
+
+  /// Handles incoming animation state changes from the native Android side.
+  ///
+  /// This method manages the keyboard animation lifecycle:
+  ///
+  /// - **Prepare Phase**: Creates a new animation session to track the
+  ///   animation.
+  ///
+  /// - **Start/Progress/End Phases**: Registers the state with the active
+  ///   session for validation and tracking.
+  ///
+  /// - **End Phase**: Retrieves the final animation verdict and emits it as the
+  ///   result, then destroys the animation session.
+  void _handleNextAnimationState(AndroidKeyboardAnimationState nextState) {
+    _logger.d(nextState);
+
+    if (nextState is AndroidKeyboardAnimationStatePrepare) {
+      // Start a new animation session.
+      _animationSession = AndroidKeyboardAnimationSession();
+    }
+
+    _animationSession!.registerAnimationState(nextState);
+
+    if (nextState is AndroidKeyboardAnimationStateEnd) {
+      _resultStreamCtl.add(_animationSession!.getSessionVerdict());
+      // End the current animation session.
+      _animationSession = null;
+    }
+  }
+
+  @override
+  Future<void> initialize() async {
+    _logger.d('Initializing Android keyboard visibility delegate');
+
+    _visibilityStreamSubscription = _flutterApiController.visibilityStream
+        .listen(_handleNextVisibilityState);
+
+    _animationStreamSubscription =
+        _flutterApiController.animationStream.listen(_handleNextAnimationState);
+
+    _logger.d('Querying initial keyboard state');
+    _resultStreamCtl.add(
+      (await _hostApiController.getVisibility()).toKeyboardVisibilityStatus(
+        isDuringAnimation: _animationSession != null,
+      ),
+    );
+
+    await _resultStreamCtl.first;
   }
 
   @override
   Future<void> dispose() async {
     await Future.wait([
-      _flutterApi.close(),
-      _verdictStreamSubscription.cancel(),
       _resultStreamCtl.close(),
+      Future.sync(() => _visibilityStreamSubscription?.cancel()),
+      Future.sync(() => _animationStreamSubscription?.cancel()),
     ]);
   }
 
   @override
-  KeyboardVisibilityStatus get value {
-    if (_resultStreamCtl.hasValue) {
-      return _resultStreamCtl.value;
-    }
-    throw StateError('No keyboard state has been emitted yet.');
-  }
+  KeyboardVisibilityStatus get value => _resultStreamCtl.value;
 
   @override
-  ValueStream<KeyboardVisibilityStatus> get stream => _resultStreamCtl.stream;
-}
-
-/// Internal implementation of [AndroidKeyboardVisibilityFlutterApi] to handle
-/// platform callbacks.
-///
-/// Converts raw platform events into useful information and deduces the current
-/// keyboard visibility status.
-class _AndroidKeyboardFlutterApiHandler
-    implements AndroidKeyboardVisibilityFlutterApi {
-  _AndroidKeyboardFlutterApiHandler({required Logger logger})
-      : _logger = logger;
-
-  /// Returns a stream of keyboard visibility verdicts combined from both
-  /// [visibilityStream] and [animationStream].
-  Stream<KeyboardVisibilityStatus> get visibilityVerdictStream {
-    return Rx.merge<KeyboardVisibilityStatus>([
-      visibilityStream.map((e) => e.status),
-      animationStream.whereType<AndroidKeyboardAnimationStateEnd>().map(
-            (e) => e.currentVerdict!,
-          ),
-    ]);
-  }
-
-  /// The stream of keyboard visibility state changes.
-  Stream<AndroidKeyboardVisibilityState> get visibilityStream =>
-      _visibilityStreamCtl.stream;
-
-  /// The stream of keyboard animation state changes.
-  Stream<AndroidKeyboardAnimationState> get animationStream =>
-      _animationStreamCtl.stream;
-
-  // Whether there is an ongoing animation session.
-  bool get isInAnimationSession => _animationSession != null;
-
-  /// The stream controller for keyboard visibility state changes.
-  final _visibilityStreamCtl =
-      StreamController<AndroidKeyboardVisibilityState>.broadcast(sync: true);
-
-  /// The stream controller for keyboard animation state changes.
-  final _animationStreamCtl =
-      StreamController<AndroidKeyboardAnimationState>.broadcast(sync: true);
-
-  /// The logger instance for logging API events.
-  final Logger _logger;
-
-  // The current active animation session.
-  _AndroidKeyboardAnimationSession? _animationSession;
-
-  /// Closes the API and cleans up resources.
-  Future<void> close() async {
-    AndroidKeyboardVisibilityFlutterApi.setUp(null);
-    await Future.wait([
-      _visibilityStreamCtl.close(),
-      _animationStreamCtl.close(),
-    ]);
-  }
-
-  /// Helper method to check if the next animation state is valid and add it to
-  /// the animation stream.
-  void _handleNextAnimationState(AndroidKeyboardAnimationState nextState) {
-    try {
-      _animationSession!.registerAnimationState(nextState);
-      _animationStreamCtl.add(nextState);
-    } catch (e) {
-      _animationStreamCtl.addError(e);
-      rethrow;
-    }
-  }
-
-  @override
-  void onVisibilityChanged(AndroidKeyboardVisibilityStateResponse response) {
-    final nextVisibilityState = AndroidKeyboardVisibilityState.fromResponse(
-      response,
-      isMaybe: isInAnimationSession,
-    );
-    _logger.d(
-      'onVisibilityChanged '
-      '(${nextVisibilityState.status.name}, '
-      '${nextVisibilityState.bottomInsetDevicePixels} device pixels)',
-    );
-
-    _animationSession?.registerVisibilityState(nextVisibilityState);
-    _visibilityStreamCtl.add(nextVisibilityState);
-  }
-
-  @override
-  void onPrepare() {
-    final nextAnimationState = AndroidKeyboardAnimationState.onPrepare();
-    _logger.d('onPrepare');
-
-    // Start a new animation session.
-    _animationSession = _AndroidKeyboardAnimationSession();
-
-    _handleNextAnimationState(nextAnimationState);
-  }
-
-  @override
-  void onStart(int lowerBoundDevicePixels, int upperBoundDevicePixels) {
-    final nextAnimationState = AndroidKeyboardAnimationState.onStart(
-      lowerBoundDevicePixels: lowerBoundDevicePixels,
-      upperBoundDevicePixels: upperBoundDevicePixels,
-      currentVerdict: _animationSession!.getSessionVerdict(),
-    );
-    _logger.d(
-      'onStart '
-      '($lowerBoundDevicePixels - $upperBoundDevicePixels device pixels)',
-    );
-
-    _handleNextAnimationState(nextAnimationState);
-  }
-
-  @override
-  void onProgress(AndroidKeyboardVisibilityStateResponse response) {
-    final nextAnimationState = AndroidKeyboardAnimationStateProgress(
-      visibilityState: AndroidKeyboardVisibilityState.fromResponse(
-        response,
-        isMaybe: true,
-      ),
-      currentVerdict: _animationSession!.getSessionVerdict(),
-    );
-    _logger.d(
-      'onProgress '
-      '(${nextAnimationState.visibilityState.status.name}, '
-      '${nextAnimationState.visibilityState.bottomInsetDevicePixels} '
-      'device pixels)',
-    );
-
-    _handleNextAnimationState(nextAnimationState);
-  }
-
-  @override
-  void onEnd() {
-    final nextAnimationState = AndroidKeyboardAnimationState.onEnd(
-      currentVerdict: _animationSession!.getSessionVerdict(),
-    );
-    _logger.d('onEnd');
-
-    _handleNextAnimationState(nextAnimationState);
-    _animationSession = null;
-  }
-}
-
-/// Represents the session for keyboard animation states on Android.
-///
-/// A single instance of this class is created for each keyboard animation
-/// session. It tracks the visibility state and animation state throughout the
-/// session and ensures that the animation states are valid according to the
-/// Android keyboard animation contract.
-class _AndroidKeyboardAnimationSession {
-  _AndroidKeyboardAnimationSession();
-
-  /// The lower bound of the keyboard animation in device pixels. This is set
-  /// when the animation starts.
-  late final int lowerBoundDevicePixels;
-
-  /// The upper bound of the keyboard animation in device pixels. This is set
-  /// when the animation starts.
-  late final int upperBoundDevicePixels;
-
-  /// Returns the session verdict based on the current session state.
-  KeyboardVisibilityStatus getSessionVerdict() {
-    try {
-      return _lastRecordedProgressState?.visibilityState.status.graduate() ??
-          _previousVisibilityState!.status.graduate();
-    } catch (e) {
-      throw StateError('Unable to determine current session verdict: $e');
-    }
-  }
-
-  AndroidKeyboardVisibilityState? _previousVisibilityState;
-  AndroidKeyboardAnimationState? _previousAnimationState;
-  AndroidKeyboardAnimationStateProgress? _lastRecordedProgressState;
-
-  /// Checks if the next animation state satisfies the Android keyboard
-  /// animation contract.
-  ///
-  /// If this returns `false`, something is wrong with the sequence of animation
-  /// states, and an [AndroidKeyboardAnimationStateContractViolation] will be
-  /// thrown when calling [registerAnimationState].
-  bool _checkNextAnimationStateValidity(
-    AndroidKeyboardAnimationState nextState,
-  ) {
-    if (_previousAnimationState is AndroidKeyboardAnimationStateEnd) {
-      /**
-       * If the previous animation state is an end state, no further animation
-       * states are allowed.
-       */
-
-      return false;
-    }
-
-    if (nextState == _previousAnimationState) {
-      /**
-       * Only duplicates of progress states are considered valid. This is
-       * because the progress state can be emitted multiple times during an
-       * ongoing animation.
-       */
-
-      return nextState is AndroidKeyboardAnimationStateProgress;
-    }
-
-    if (nextState is AndroidKeyboardAnimationStatePrepare) {
-      /**
-       * If the next state is a prepare state, it is considered invalid if there
-       * is a previous animation state recorded. This is because the animation
-       * prepare state should only be recorded at the start of a new session.
-       */
-
-      return _previousAnimationState == null;
-    }
-
-    /**
-     * If you reach here, the next state is not a prepare state. Starting from
-     * here at least one previous animation state and one previous visibility
-     * state must have been recorded.
-     *
-     * Below is the check for that.
-     */
-
-    if (_previousVisibilityState == null || _previousAnimationState == null) {
-      return false;
-    }
-
-    switch (nextState) {
-      case AndroidKeyboardAnimationStateStart():
-        if (_previousAnimationState is! AndroidKeyboardAnimationStatePrepare) {
-          /**
-           * AndroidKeyboardAnimationStateStart should come after
-           * AndroidKeyboardAnimationStatePrepare.
-           */
-
-          return false;
-        }
-
-      case AndroidKeyboardAnimationStateProgress():
-        if (_previousAnimationState is! AndroidKeyboardAnimationStateStart &&
-            _previousAnimationState is! AndroidKeyboardAnimationStateProgress) {
-          /**
-           * AndroidKeyboardAnimationStateProgress should come after
-           * AndroidKeyboardAnimationStateStart or
-           * AndroidKeyboardAnimationStateProgress.
-           */
-
-          return false;
-        }
-
-      case AndroidKeyboardAnimationStateEnd():
-        if (_previousAnimationState is! AndroidKeyboardAnimationStateStart &&
-            _previousAnimationState is! AndroidKeyboardAnimationStateProgress) {
-          /**
-           * AndroidKeyboardAnimationStateEnd should come after
-           * AndroidKeyboardAnimationStateStart or
-           * AndroidKeyboardAnimationStateProgress.
-           */
-
-          return false;
-        }
-    }
-
-    // Animation state validity checks passed.
-    return true;
-  }
-
-  /// Registers the next visibility state for the current animation session.
-  // ignore: use_setters_to_change_properties
-  void registerVisibilityState(AndroidKeyboardVisibilityState state) {
-    _previousVisibilityState = state;
-  }
-
-  /// Registers the next animation state for the current animation session.
-  void registerAnimationState(AndroidKeyboardAnimationState state) {
-    if (!_checkNextAnimationStateValidity(state)) {
-      throw AndroidKeyboardAnimationStateContractViolation(
-        previousVisibilityState: _previousVisibilityState,
-        previousAnimationState: _previousAnimationState,
-        nextAnimationState: state,
-      );
-    }
-
-    if (state is AndroidKeyboardAnimationStateStart) {
-      lowerBoundDevicePixels = state.lowerBoundDevicePixels;
-      upperBoundDevicePixels = state.upperBoundDevicePixels;
-    }
-
-    if (state is AndroidKeyboardAnimationStateProgress) {
-      _lastRecordedProgressState = state;
-    }
-
-    _previousAnimationState = state;
-  }
+  late ValueStream<KeyboardVisibilityStatus> valueStream = _resultStreamCtl
+      .stream
+      .distinct()
+      .doOnData((event) => _logger.d('Final verdict: ${event.name}'))
+      .shareValue();
 }

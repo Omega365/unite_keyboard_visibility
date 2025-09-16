@@ -9,4 +9,4 @@ targets:
       dart_mappable_builder:
         generate_for:
           include:
-            - lib/src/states/**.dart
+            - lib/src/domain/**.dart

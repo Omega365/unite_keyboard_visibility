@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/unite_keyboard_visibility.dart';
 
 /// Signature for [KeyboardVisibilityBuilder] builder callback.

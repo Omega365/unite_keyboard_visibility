@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/platform/fallback/unite_keyboard_visibility_fallback.dart';
 import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 
 /// A class that provides methods to access the device keyboard visibility
 /// status.
@@ -28,9 +28,9 @@ import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
 /// await visibility.dispose();
 /// ```
 class UniteKeyboardVisibility {
-  UniteKeyboardVisibility._internal();
+  const UniteKeyboardVisibility._internal();
 
-  static final UniteKeyboardVisibility _instance =
+  static const UniteKeyboardVisibility _instance =
       UniteKeyboardVisibility._internal();
 
   /// The singleton instance of [UniteKeyboardVisibility].
@@ -39,66 +39,39 @@ class UniteKeyboardVisibility {
   UniteKeyboardVisibilityPlatform get _platformInstance =>
       UniteKeyboardVisibilityPlatform.instance;
 
-  bool _isInitialized = false;
-
-  /// Whether the plugin has been initialized.
-  bool get isInitialized => _isInitialized;
-
   /// Initializes keyboard visibility detection.
   ///
-  /// Parameters:
-  ///   - [enableLogging]: Enables internal logging when set to true. Useful for
-  ///     debugging but may impact performance. Defaults to `false`.
+  /// - [enableLogging]: Enables internal logging for debugging. Defaults to
+  ///   `false`.
   ///
-  ///   - [forceFallback]: iOS always uses fallback mode, so this parameter is
-  ///     ignored on iOS. On Android, it forces the use of the fallback
-  ///     implementation, which may be necessary if the newer implementation
-  ///     does not work correctly on some devices. Note that
-  ///     [KeyboardVisibilityStatus.maybeClose],
-  ///     [KeyboardVisibilityStatus.maybeOpen] and floating keyboard are not
-  ///     supported in fallback mode. Defaults to `false`.
+  /// - [forceFallback]: Forces the use of the fallback implementation on
+  ///   Android, which may be necessary if the newer implementation does not
+  ///   work correctly. iOS always uses fallback mode, so this parameter is
+  ///   ignored on iOS. Note that [KeyboardVisibilityStatus.maybeClose],
+  ///   [KeyboardVisibilityStatus.maybeOpen] and floating keyboard detection are
+  ///   not supported in fallback mode. Defaults to `false`.
+  ///
+  /// If you want to re-initialize this plugin, you must call [dispose] first.
   Future<void> initialize({
     bool enableLogging = false,
     bool forceFallback = false,
   }) async {
-    if (forceFallback) {
+    if (forceFallback && !_platformInstance.isInitialized) {
       UniteKeyboardVisibilityFallback.registerWith();
-      await UniteKeyboardVisibility.instance.initialize(
-        enableLogging: enableLogging,
-        forceFallback: forceFallback,
-      );
-      return;
     }
-
     await _platformInstance.initialize(enableLogging: enableLogging);
-    _isInitialized = true;
   }
 
-  /// Disposes the plugin and releases resources.
-  Future<void> dispose() async {
-    await _platformInstance.dispose();
-  }
+  /// {@macro UniteKeyboardVisibilityPlatform.dispose}
+  Future<void> dispose() => _platformInstance.dispose();
 
-  /// Returns the current keyboard visibility.
-  KeyboardVisibilityStatus get value {
-    if (!_isInitialized) {
-      throw _notInitializedError;
-    }
-    return _platformInstance.value;
-  }
+  /// {@macro UniteKeyboardVisibilityPlatform.isInitialized}
+  bool get isInitialized => _platformInstance.isInitialized;
 
-  /// Watch a stream of keyboard visibility. The current value will be emitted
-  /// immediately for any new listener.
-  ValueStream<KeyboardVisibilityStatus> get valueStream {
-    if (!_isInitialized) {
-      throw _notInitializedError;
-    }
-    return _platformInstance.stream;
-  }
+  /// {@macro UniteKeyboardVisibilityPlatform.value}
+  KeyboardVisibilityStatus get value => _platformInstance.value;
+
+  /// {@macro UniteKeyboardVisibilityPlatform.valueStream}
+  ValueStream<KeyboardVisibilityStatus> get valueStream =>
+      _platformInstance.valueStream;
 }
-
-/// Error thrown when accessing plugin before initialization.
-final _notInitializedError = StateError(
-  'UniteKeyboardVisibility has not been initialized. '
-  'Call initialize() before accessing value or valueStream.',
-);

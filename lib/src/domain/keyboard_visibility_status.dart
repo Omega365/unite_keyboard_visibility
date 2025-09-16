@@ -1,7 +1,3 @@
-import 'package:dart_mappable/dart_mappable.dart';
-
-part 'keyboard_state.mapper.dart';
-
 /// Represents the keyboard visibility status.
 enum KeyboardVisibilityStatus {
   /// The keyboard is fully open.
@@ -21,6 +17,7 @@ enum KeyboardVisibilityStatus {
   /// - [maybeOpen] is treated as [open].
   /// - [maybeClose] is treated as [close].
   /// - [open] and [close] remain unchanged.
+  @Deprecated('No longer in use. Will be removed in future versions.')
   KeyboardVisibilityStatus graduate() {
     switch (this) {
       case KeyboardVisibilityStatus.open:
@@ -33,11 +30,4 @@ enum KeyboardVisibilityStatus {
         return KeyboardVisibilityStatus.close;
     }
   }
-}
-
-/// Represents the keyboard state.
-@MappableClass()
-class KeyboardVisibilityState with KeyboardVisibilityStateMappable {
-  const KeyboardVisibilityState({required this.status});
-  final KeyboardVisibilityStatus status;
 }

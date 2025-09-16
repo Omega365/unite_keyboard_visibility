@@ -23,6 +23,9 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
   );
 
   @override
+  bool isInitialized = false;
+
+  @override
   Future<void> initialize({required bool enableLogging}) async {
     final keyboardVisibilityController = KeyboardVisibilityController();
 
@@ -36,6 +39,8 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
             : KeyboardVisibilityStatus.close,
       );
     });
+
+    isInitialized = true;
   }
 
   @override
@@ -44,6 +49,8 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
       _verdictStreamSubscription.cancel(),
       _resultStreamCtl.close(),
     ]);
+
+    isInitialized = false;
   }
 
   @override
@@ -55,5 +62,6 @@ class UniteKeyboardVisibilityFallback extends UniteKeyboardVisibilityPlatform {
   }
 
   @override
-  ValueStream<KeyboardVisibilityStatus> get stream => _resultStreamCtl.stream;
+  ValueStream<KeyboardVisibilityStatus> get valueStream =>
+      _resultStreamCtl.stream;
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:unite_keyboard_visibility/src/states/keyboard_state.dart';
+import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/unite_keyboard_visibility.dart';
 import 'package:unite_keyboard_visibility/src/widgets/keyboard_visibility_focus_node.dart';
 
