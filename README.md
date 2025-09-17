@@ -243,7 +243,7 @@ KeyboardVisibilityBuilder(
 ## Troubleshooting
 
 - Ensure you call `initialize()` before using `value` or `valueStream`, or a
-  `StateError` will be thrown when you try to access any plugin resources.
+  `PluginUninitializedError` will be thrown when you try to access any plugin resources.
 - Use `forceFallback` on Android if the native implementation does not detect
   visibility correctly. This option will be removed once the plugin reaches
   stable (ideally with full Android, iOS and WASM support).
