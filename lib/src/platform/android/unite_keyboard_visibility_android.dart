@@ -29,6 +29,9 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
     AndroidKeyboardVisibilityHostApi(),
   );
 
+  /// Special flag to enable the logging delegate for debugging purposes.
+  static const bool _useLoggingDelegate = false;
+
   /// The delegate that handles the actual keyboard visibility detection and
   /// state management.
   KeyboardVisibilityDelegate _delegate = PluginUninitializedDelegate();
@@ -42,14 +45,22 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
       throw PluginInitializedError();
     }
 
-    _delegate = _UniteKeyboardVisibilityAndroidDelegate(
-      logger: Logger(
-        printer: SimplePrinter(colors: false, printTime: true),
-        level: enableLogging ? Level.all : Level.off,
-      ),
-      flutterApiService: _flutterApiHandler,
-      hostApiClient: _hostApiClient,
+    final logger = Logger(
+      printer: SimplePrinter(colors: false, printTime: true),
+      level: enableLogging ? Level.all : Level.off,
     );
+
+    _delegate = _useLoggingDelegate
+        ? _UniteKeyboardVisibilityAndroidLogEventsDelegate(
+            logger: logger,
+            flutterApiService: _flutterApiHandler,
+            hostApiClient: _hostApiClient,
+          )
+        : _UniteKeyboardVisibilityAndroidDelegate(
+            logger: logger,
+            flutterApiService: _flutterApiHandler,
+            hostApiClient: _hostApiClient,
+          );
 
     AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApiHandler);
     await _delegate.initialize();
@@ -196,4 +207,56 @@ class _UniteKeyboardVisibilityAndroidDelegate
       .distinct()
       .doOnData((event) => _logger.d('Final verdict: ${event.name}'))
       .shareValue();
+}
+
+/// A delegate that logs all incoming Android keyboard API events but does not
+/// perform any actual visibility detection or state management. Useful for
+/// debugging events-related issues.
+///
+/// If you try to use this delegate to get the current keyboard visibility
+/// state, it will always return [KeyboardVisibilityStatus.close] since it does
+/// not track any real state.
+class _UniteKeyboardVisibilityAndroidLogEventsDelegate
+    implements KeyboardVisibilityDelegate {
+  _UniteKeyboardVisibilityAndroidLogEventsDelegate({
+    required Logger logger,
+    required AndroidKeyboardVisibilityFlutterApiService flutterApiService,
+    required AndroidKeyboardVisibilityHostApiClient hostApiClient,
+  })  : _logger = logger,
+        _flutterApiService = flutterApiService,
+        _hostApiClient = hostApiClient;
+
+  /// The logger instance for logging API events.
+  final Logger _logger;
+
+  /// The Flutter API for receiving events from the native Android code.
+  final AndroidKeyboardVisibilityFlutterApiService _flutterApiService;
+
+  /// The host API for communicating with the native Android code.
+  final AndroidKeyboardVisibilityHostApiClient _hostApiClient;
+
+  /// The state logger for logging incoming API events.
+  late final _eventLogger = AndroidKeyboardApiEventLogger(
+    logger: _logger,
+    flutterApiService: _flutterApiService,
+  );
+
+  @override
+  Future<void> initialize() async {
+    _eventLogger.initialize();
+    await _hostApiClient.setListenersEnabled(true);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _hostApiClient.setListenersEnabled(false);
+    await _eventLogger.dispose();
+  }
+
+  @override
+  KeyboardVisibilityStatus get value => KeyboardVisibilityStatus.close;
+
+  @override
+  ValueStream<KeyboardVisibilityStatus> valueStream =
+      BehaviorSubject.seeded(KeyboardVisibilityStatus.close);
 }
