@@ -8,6 +8,7 @@ import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_animation_session.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_api_handlers.dart';
+import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_state_logger.dart';
 import 'package:unite_keyboard_visibility/src/platform/keyboard_visibility_delegate.dart';
 import 'package:unite_keyboard_visibility/src/platform/unite_keyboard_visibility_platform_interface.dart';
 
@@ -97,6 +98,12 @@ class _UniteKeyboardVisibilityAndroidDelegate
     onCancel: () async => _hostApiClient.setListenersEnabled(false),
   );
 
+  /// The state logger for logging incoming API events.
+  late final _eventLogger = AndroidKeyboardApiEventLogger(
+    logger: _logger,
+    flutterApiService: _flutterApiService,
+  );
+
   /// Subscription to the visibility state stream from native Android.
   StreamSubscription<AndroidKeyboardVisibilityState>?
       _visibilityStreamSubscription;
@@ -113,8 +120,6 @@ class _UniteKeyboardVisibilityAndroidDelegate
 
   /// Handles incoming visibility state changes from the native Android side.
   void _handleNextVisibilityState(AndroidKeyboardVisibilityState nextState) {
-    _logger.d(nextState);
-
     _animationSession?.registerVisibilityState(nextState);
     _resultStreamCtl.add(
       nextState.toKeyboardVisibilityStatus(
@@ -136,8 +141,6 @@ class _UniteKeyboardVisibilityAndroidDelegate
   /// - **End Phase**: Retrieves the final animation verdict and emits it as the
   ///   result, then destroys the animation session.
   void _handleNextAnimationState(AndroidKeyboardAnimationState nextState) {
-    _logger.d(nextState);
-
     if (nextState is AndroidKeyboardAnimationStatePrepare) {
       // Start a new animation session.
       _animationSession = AndroidKeyboardAnimationSession();
@@ -155,6 +158,8 @@ class _UniteKeyboardVisibilityAndroidDelegate
   @override
   Future<void> initialize() async {
     _logger.d('Initializing Android keyboard visibility delegate');
+
+    _eventLogger.initialize();
 
     _visibilityStreamSubscription =
         _flutterApiService.visibilityStream.listen(_handleNextVisibilityState);
@@ -176,6 +181,7 @@ class _UniteKeyboardVisibilityAndroidDelegate
   Future<void> dispose() async {
     await Future.wait([
       _resultStreamCtl.close(),
+      _eventLogger.dispose(),
       Future.sync(() => _visibilityStreamSubscription?.cancel()),
       Future.sync(() => _animationStreamSubscription?.cancel()),
     ]);
