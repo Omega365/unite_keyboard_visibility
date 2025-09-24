@@ -128,10 +128,9 @@ class KeyboardVisibilityTracker(
     Logger.debug { "Attaching keyboard visibility listeners" }
 
     // Apply listeners to the view
-    view.setOnApplyWindowInsetsListener { _, insets ->
+    ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
       Logger.debug { "OnApplyWindowInsetsListener triggered" }
-      val insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets, view)
-      val currentState = insetsCompat.toKeyboardState()
+      val currentState = insets.toKeyboardState()
 
       Logger.debug { "Keyboard state: visible=${currentState.isVisible}, height=${currentState.bottomInsetDevicePixels}" }
       flutterApi.onVisibilityChanged(currentState) {
@@ -199,7 +198,7 @@ class KeyboardVisibilityTracker(
     Logger.debug { "Detaching keyboard visibility listeners" }
 
     // Remove listeners from the view
-    view.setOnApplyWindowInsetsListener(null)
+    ViewCompat.setOnApplyWindowInsetsListener(view, null)
     ViewCompat.setWindowInsetsAnimationCallback(view, null)
   }
 
