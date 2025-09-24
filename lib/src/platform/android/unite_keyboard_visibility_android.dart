@@ -23,7 +23,7 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
       AndroidKeyboardVisibilityFlutterApiHandler();
 
   /// The host API for communicating with the native Android code.
-  final AndroidKeyboardVisibilityHostApiClient _androidHostApi =
+  final AndroidKeyboardVisibilityHostApiClient _hostApiClient =
       AndroidKeyboardVisibilityHostApiClientPigeonAdapter(
     AndroidKeyboardVisibilityHostApi(),
   );
@@ -46,8 +46,8 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
         printer: SimplePrinter(colors: false, printTime: true),
         level: enableLogging ? Level.all : Level.off,
       ),
-      flutterApiController: _flutterApiHandler,
-      hostApiController: _androidHostApi,
+      flutterApiService: _flutterApiHandler,
+      hostApiClient: _hostApiClient,
     );
 
     AndroidKeyboardVisibilityFlutterApi.setUp(_flutterApiHandler);
@@ -75,26 +75,26 @@ class _UniteKeyboardVisibilityAndroidDelegate
     implements KeyboardVisibilityDelegate {
   _UniteKeyboardVisibilityAndroidDelegate({
     required Logger logger,
-    required AndroidKeyboardVisibilityFlutterApiService flutterApiController,
-    required AndroidKeyboardVisibilityHostApiClient hostApiController,
+    required AndroidKeyboardVisibilityFlutterApiService flutterApiService,
+    required AndroidKeyboardVisibilityHostApiClient hostApiClient,
   })  : _logger = logger,
-        _flutterApiController = flutterApiController,
-        _hostApiController = hostApiController;
+        _flutterApiService = flutterApiService,
+        _hostApiClient = hostApiClient;
 
   /// The logger instance for logging API events.
   final Logger _logger;
 
   /// The Flutter API for receiving events from the native Android code.
-  final AndroidKeyboardVisibilityFlutterApiService _flutterApiController;
+  final AndroidKeyboardVisibilityFlutterApiService _flutterApiService;
 
   /// The host API for communicating with the native Android code.
-  final AndroidKeyboardVisibilityHostApiClient _hostApiController;
+  final AndroidKeyboardVisibilityHostApiClient _hostApiClient;
 
   /// The stream controller for emitting the final keyboard visibility status.
   late final _resultStreamCtl = BehaviorSubject<KeyboardVisibilityStatus>(
     sync: true,
-    onListen: () async => _hostApiController.setListenersEnabled(true),
-    onCancel: () async => _hostApiController.setListenersEnabled(false),
+    onListen: () async => _hostApiClient.setListenersEnabled(true),
+    onCancel: () async => _hostApiClient.setListenersEnabled(false),
   );
 
   /// Subscription to the visibility state stream from native Android.
@@ -156,15 +156,15 @@ class _UniteKeyboardVisibilityAndroidDelegate
   Future<void> initialize() async {
     _logger.d('Initializing Android keyboard visibility delegate');
 
-    _visibilityStreamSubscription = _flutterApiController.visibilityStream
-        .listen(_handleNextVisibilityState);
+    _visibilityStreamSubscription =
+        _flutterApiService.visibilityStream.listen(_handleNextVisibilityState);
 
     _animationStreamSubscription =
-        _flutterApiController.animationStream.listen(_handleNextAnimationState);
+        _flutterApiService.animationStream.listen(_handleNextAnimationState);
 
     _logger.d('Querying initial keyboard state');
     _resultStreamCtl.add(
-      (await _hostApiController.getVisibility()).toKeyboardVisibilityStatus(
+      (await _hostApiClient.getVisibility()).toKeyboardVisibilityStatus(
         isDuringAnimation: _animationSession != null,
       ),
     );
