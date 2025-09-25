@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.4.1] - 2025-09-25
 ### Fixed
 - Fix visibility detection failing on Android 10 (API 29) and below.
 - Improve detection accuracy on Android 11 (API 30) and above.
@@ -62,7 +62,7 @@
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.4.0...vHEAD
+[0.4.1]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.4...v0.3.0
 [0.2.4]: https://github.com/VinhNgT/unite_keyboard_visibility/compare/v0.2.3...v0.2.4

@@ -3,7 +3,7 @@ description: >-
   A Flutter plugin to detect keyboard visibility across platforms using modern
   APIs. Supports floating keyboard and Android 15 predictive back gesture.
 repository: https://github.com/VinhNgT/unite_keyboard_visibility
-version: 0.4.0
+version: 0.4.1
 
 topics:
   - software-keyboard
