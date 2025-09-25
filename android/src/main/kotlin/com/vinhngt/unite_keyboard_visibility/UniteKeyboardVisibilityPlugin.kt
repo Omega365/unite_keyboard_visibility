@@ -252,8 +252,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
   // ActivityAware
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     Logger.debug { "onAttachedToActivity" }
-    val contentView = binding.activity.findViewById<View>(android.R.id.content)
-    keyboardTracker.setRootView(contentView)
+    keyboardTracker.setRootView(binding.activity.window.decorView)
   }
 
   override fun onDetachedFromActivity() {
@@ -263,8 +262,7 @@ class UniteKeyboardVisibilityPlugin : FlutterPlugin, ActivityAware,
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     Logger.debug { "onReattachedToActivityForConfigChanges" }
-    val contentView = binding.activity.findViewById<View>(android.R.id.content)
-    keyboardTracker.setRootView(contentView)
+    keyboardTracker.setRootView(binding.activity.window.decorView)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
