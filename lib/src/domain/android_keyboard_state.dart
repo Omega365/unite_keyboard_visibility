@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
+import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
 
 part 'android_keyboard_state.mapper.dart';
 
@@ -11,6 +12,15 @@ class AndroidKeyboardVisibilityState
     required this.isVisible,
     required this.bottomInsetDevicePixels,
   });
+
+  factory AndroidKeyboardVisibilityState.fromPigeonResponse(
+    AndroidKeyboardVisibilityStateResponse response,
+  ) {
+    return AndroidKeyboardVisibilityState(
+      isVisible: response.isVisible,
+      bottomInsetDevicePixels: response.bottomInsetDevicePixels,
+    );
+  }
 
   /// Whether the keyboard is visible or not.
   final bool isVisible;

@@ -68,10 +68,7 @@ class AndroidKeyboardVisibilityFlutterApiHandler
   @override
   void onVisibilityChanged(AndroidKeyboardVisibilityStateResponse response) {
     _visibilityStreamCtl.add(
-      AndroidKeyboardVisibilityState(
-        isVisible: response.isVisible,
-        bottomInsetDevicePixels: response.bottomInsetDevicePixels,
-      ),
+      AndroidKeyboardVisibilityState.fromPigeonResponse(response),
     );
   }
 
@@ -94,10 +91,8 @@ class AndroidKeyboardVisibilityFlutterApiHandler
   void onProgress(AndroidKeyboardVisibilityStateResponse response) {
     _animationStreamCtl.add(
       AndroidKeyboardAnimationState.onProgress(
-        visibilityState: AndroidKeyboardVisibilityState(
-          isVisible: response.isVisible,
-          bottomInsetDevicePixels: response.bottomInsetDevicePixels,
-        ),
+        visibilityState:
+            AndroidKeyboardVisibilityState.fromPigeonResponse(response),
       ),
     );
   }
