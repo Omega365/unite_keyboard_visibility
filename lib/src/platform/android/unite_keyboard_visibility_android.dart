@@ -6,7 +6,6 @@ import 'package:unite_keyboard_visibility/src/domain/android_keyboard_state.dart
 import 'package:unite_keyboard_visibility/src/domain/exceptions.dart';
 import 'package:unite_keyboard_visibility/src/domain/keyboard_visibility_status.dart';
 import 'package:unite_keyboard_visibility/src/generated/messages.g.dart';
-import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_animation_session.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_api_handlers.dart';
 import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_state_logger.dart';
 import 'package:unite_keyboard_visibility/src/platform/keyboard_visibility_delegate.dart';
@@ -123,46 +122,29 @@ class _UniteKeyboardVisibilityAndroidDelegate
   StreamSubscription<AndroidKeyboardAnimationState>?
       _animationStreamSubscription;
 
-  /// The current active animation session, if any.
+  /// Flag that indicates there is a keyboard animation running.
   ///
-  /// Created when an animation prepare event is received and destroyed when the
-  /// animation ends. Used to track and validate the animation state sequence.
-  AndroidKeyboardAnimationSession? _animationSession;
+  /// Set to `true` when an animation prepare event is received and `false` when
+  /// an onFinished event is received.
+  bool _isDuringAnimation = false;
 
   /// Handles incoming visibility state changes from the native Android side.
   void _handleNextVisibilityState(AndroidKeyboardVisibilityState nextState) {
-    _animationSession?.registerVisibilityState(nextState);
     _resultStreamCtl.add(
       nextState.toKeyboardVisibilityStatus(
-        isDuringAnimation: _animationSession != null,
+        isDuringAnimation: _isDuringAnimation,
       ),
     );
   }
 
   /// Handles incoming animation state changes from the native Android side.
-  ///
-  /// This method manages the keyboard animation lifecycle:
-  ///
-  /// - **Prepare Phase**: Creates a new animation session to track the
-  ///   animation.
-  ///
-  /// - **Start/Progress/End Phases**: Registers the state with the active
-  ///   session for validation and tracking.
-  ///
-  /// - **End Phase**: Retrieves the final animation verdict and emits it as the
-  ///   result, then destroys the animation session.
   void _handleNextAnimationState(AndroidKeyboardAnimationState nextState) {
-    if (nextState is AndroidKeyboardAnimationStatePrepare) {
-      // Start a new animation session.
-      _animationSession = AndroidKeyboardAnimationSession();
-    }
+    switch (nextState) {
+      case AndroidKeyboardAnimationStatePrepare():
+        _isDuringAnimation = true;
 
-    _animationSession!.registerAnimationState(nextState);
-
-    if (nextState is AndroidKeyboardAnimationStateEnd) {
-      _resultStreamCtl.add(_animationSession!.getSessionVerdict());
-      // End the current animation session.
-      _animationSession = null;
+      case AndroidKeyboardAnimationStateEnd():
+        _isDuringAnimation = false;
     }
   }
 
@@ -181,7 +163,7 @@ class _UniteKeyboardVisibilityAndroidDelegate
     _logger.d('Querying initial keyboard state');
     _resultStreamCtl.add(
       (await _hostApiClient.getVisibility()).toKeyboardVisibilityStatus(
-        isDuringAnimation: _animationSession != null,
+        isDuringAnimation: _isDuringAnimation,
       ),
     );
 

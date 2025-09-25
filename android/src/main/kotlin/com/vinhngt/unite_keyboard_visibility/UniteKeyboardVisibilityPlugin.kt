@@ -189,6 +189,9 @@ class KeyboardVisibilityTracker(
             flutterApi.onEnd {
               Logger.debug { "Flutter onEnd callback completed" }
             }
+
+            // Let Flutter know about the state after animation.
+            view.requestApplyInsets()
           }
         }
       })

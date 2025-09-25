@@ -51,7 +51,7 @@ class _KeyboardVisibilityUnfocuserState
   FocusNode? _tempPreviousFocusNode;
 
   /// [_tempPreviousFocusNode] should be null at the start of a closing
-  /// animation session. Call this to check.
+  /// animation. Call this to check.
   void _previousFocusNodeNullCheck() {
     if (_tempPreviousFocusNode != null) {
       throw StateError('Previous focus node is not null');
