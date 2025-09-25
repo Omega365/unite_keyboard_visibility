@@ -3,14 +3,19 @@
 ---
 
 A Flutter plugin to detect keyboard visibility across platforms using modern
-APIs. Supports floating keyboard and Android 15 predictive back gesture.
+APIs. Supports floating keyboard and Android predictive back gesture.
 
-Only Android and iOS are supported at the moment. On iOS, this plugin falls back
-to an implementation based on
+**Floating keyboard and predictive back gesture detection is only supported on
+Android 11+.**
+
+On iOS, this plugin falls back to an implementation based on
 [flutter_keyboard_visibility](https://pub.dev/packages/flutter_keyboard_visibility)
-until I have time to write my own implementation. Pull requests are welcome.
+until I have time to write my own implementation.
 
-WASM support is planned.
+WASM support was originally planned, but since [VirtualKeyboard
+API](https://developer.mozilla.org/en-US/docs/Web/API/VirtualKeyboard_API) is
+still experimental and not widely supported, I have decided to postpone it until
+the API is stable and supported by major browsers.
 
 Desktop platforms like macOS, Windows and Linux are not planned. Still, you are
 welcome to make contributions in this regard.
@@ -50,7 +55,7 @@ Add the dependency to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  unite_keyboard_visibility: ^0.1.2
+  unite_keyboard_visibility: ^0.4.1
 ```
 
 Then get packages:
@@ -147,8 +152,7 @@ Future<void> initialize({
 
 Initializes keyboard visibility detection.
 
-- `enableLogging`: Enables internal logging. May affect performance. Defaults to
-  `false`.
+- `enableLogging`: Enables internal logging. Defaults to `false`.
 - `forceFallback`: Forces the fallback implementation
   ([flutter_keyboard_visibility](https://pub.dev/packages/flutter_keyboard_visibility))
   on Android. Has no effect on iOS. Defaults to `false`.
@@ -243,9 +247,10 @@ KeyboardVisibilityBuilder(
 ## Troubleshooting
 
 - Ensure you call `initialize()` before using `value` or `valueStream`, or a
-  `PluginUninitializedError` will be thrown when you try to access any plugin resources.
+  `PluginUninitializedError` will be thrown when you try to access any of the
+  plugin resources.
 - Use `forceFallback` on Android if the native implementation does not detect
-  visibility correctly. This option will be removed once the plugin reaches
+  visibility correctly. This option will be removed once the plugin is fully
   stable (ideally with full Android, iOS and WASM support).
 
 ## Contributing
