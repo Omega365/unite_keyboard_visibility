@@ -14,14 +14,13 @@ import 'package:unite_keyboard_visibility/src/platform/android/android_keyboard_
 /// lifecycle for starting and stopping logging.
 class AndroidKeyboardApiEventLogger {
   /// Creates a logger that writes Flutter-side Android keyboard events to
-  /// [logger].
+  /// [_logger].
   ///
-  /// The [flutterApiService] supplies the event streams to subscribe to.
+  /// The [_flutterApiService] supplies the event streams to subscribe to.
   AndroidKeyboardApiEventLogger({
-    required Logger logger,
-    required AndroidKeyboardVisibilityFlutterApiService flutterApiService,
-  })  : _logger = logger,
-        _flutterApiService = flutterApiService;
+    required this._logger,
+    required this._flutterApiService,
+  });
 
   /// The logger used to emit debug messages.
   final Logger _logger;

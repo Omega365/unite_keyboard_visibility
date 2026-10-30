@@ -85,12 +85,10 @@ class UniteKeyboardVisibilityAndroid extends UniteKeyboardVisibilityPlatform {
 class _UniteKeyboardVisibilityAndroidDelegate
     implements KeyboardVisibilityDelegate {
   _UniteKeyboardVisibilityAndroidDelegate({
-    required Logger logger,
-    required AndroidKeyboardVisibilityFlutterApiService flutterApiService,
-    required AndroidKeyboardVisibilityHostApiClient hostApiClient,
-  })  : _logger = logger,
-        _flutterApiService = flutterApiService,
-        _hostApiClient = hostApiClient;
+    required this._logger,
+    required this._flutterApiService,
+    required this._hostApiClient,
+  });
 
   /// The logger instance for logging API events.
   final Logger _logger;
@@ -201,12 +199,10 @@ class _UniteKeyboardVisibilityAndroidDelegate
 class _UniteKeyboardVisibilityAndroidLogEventsDelegate
     implements KeyboardVisibilityDelegate {
   _UniteKeyboardVisibilityAndroidLogEventsDelegate({
-    required Logger logger,
-    required AndroidKeyboardVisibilityFlutterApiService flutterApiService,
-    required AndroidKeyboardVisibilityHostApiClient hostApiClient,
-  })  : _logger = logger,
-        _flutterApiService = flutterApiService,
-        _hostApiClient = hostApiClient;
+    required this._logger,
+    required this._flutterApiService,
+    required this._hostApiClient,
+  });
 
   /// The logger instance for logging API events.
   final Logger _logger;

@@ -1,3 +1,11 @@
+## [0.4.2] - 2026-10-30
+### Changed
+- Migrate to built-in Kotlin on Android.
+- Bump `sdk` to `^3.12.0` and `flutter` to `>=3.44.0`, which built-in Kotlin requires.
+
+### Fixed
+- Compile against Android SDK 36, which `flutter_keyboard_visibility_temp_fork` 0.1.6 requires.
+
 ## [0.4.1] - 2025-09-25
 ### Fixed
 - Fix visibility detection failing on Android 10 (API 29) and below.
